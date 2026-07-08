@@ -1,0 +1,35 @@
+# Nuxt dev/build outputs
+.output/
+.data/
+.nuxt/
+.nitro/
+.cache/
+dist/
+
+# Node dependencies
+node_modules/
+
+# Package manager local stores
+.pnpm-store/
+
+# Logs
+logs/
+*.log
+pnpm-debug.log*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Misc
+.DS_Store
+Thumbs.db
+.fleet
+.idea
+
+# Accidental local CLI argument workspaces
+--host/
+
+# Local env files
+.env
+.env.*
+!.env.example
