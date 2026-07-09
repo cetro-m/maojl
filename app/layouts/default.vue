@@ -2,10 +2,19 @@
   <div class="site-shell">
     <header class="site-header">
       <NuxtLink class="brand" to="/" aria-label="maojl home">
-        <span class="brand-mark">M</span>
+        <span class="brand-mark" aria-hidden="true">
+          <span class="brand-pixels">
+            <span />
+            <span />
+            <span />
+            <span />
+          </span>
+          <span class="brand-prompt">&gt;_</span>
+        </span>
+        <span class="brand-separator" aria-hidden="true" />
         <span class="brand-copy">
-          <span class="brand-name">maojl</span>
-          <span class="brand-path">~/digital-lab</span>
+          <span class="brand-name">MAOJL.XYZ</span>
+          <span class="brand-path">~/idea</span>
         </span>
       </NuxtLink>
 

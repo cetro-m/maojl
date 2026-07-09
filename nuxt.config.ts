@@ -1,3 +1,6 @@
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
@@ -20,6 +23,9 @@ export default defineNuxtConfig({
     zeroRuntime: true,
     exclude: ['/__nuxt_content/**'],
   },
+  schemaOrg: {
+    enabled: false,
+  },
   app: {
     head: {
       titleTemplate: '%s | maojl',
@@ -36,6 +42,13 @@ export default defineNuxtConfig({
     },
   },
   content: {
+    experimental: {
+      sqliteConnector: 'native',
+    },
+    _localDatabase: {
+      type: 'sqlite',
+      filename: join(tmpdir(), 'maojl-nuxt-content', 'contents.sqlite'),
+    },
     build: {
       markdown: {
         highlight: {

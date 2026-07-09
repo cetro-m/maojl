@@ -20,7 +20,7 @@ useSeoMeta({
       <p>Short notes keep the bench warm: a debugging result, a design observation, or a question still fermenting.</p>
     </section>
 
-    <div class="post-grid">
+    <div class="notes-grid">
       <NuxtLink v-for="note in notes" :key="note.path" class="post-card" :to="note.path">
         <article>
           <p class="article-meta">{{ formatDate(note.date) }} / {{ note.category }}</p>

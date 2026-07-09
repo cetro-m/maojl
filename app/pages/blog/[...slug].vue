@@ -96,20 +96,20 @@ useSeoMeta({
       </aside>
 
       <ContentRenderer class="prose" :value="article" />
+
+      <nav v-if="newerPost || olderPost" class="post-navigation" aria-label="Post navigation">
+        <NuxtLink v-if="newerPost" class="post-nav-card" :to="newerPost.path">
+          <span>Newer</span>
+          <strong>{{ newerPost.title }}</strong>
+        </NuxtLink>
+        <span v-else />
+
+        <NuxtLink v-if="olderPost" class="post-nav-card align-right" :to="olderPost.path">
+          <span>Older</span>
+          <strong>{{ olderPost.title }}</strong>
+        </NuxtLink>
+      </nav>
     </div>
-
-    <nav v-if="newerPost || olderPost" class="post-navigation" aria-label="Post navigation">
-      <NuxtLink v-if="newerPost" class="post-nav-card" :to="newerPost.path">
-        <span>Newer</span>
-        <strong>{{ newerPost.title }}</strong>
-      </NuxtLink>
-      <span v-else />
-
-      <NuxtLink v-if="olderPost" class="post-nav-card align-right" :to="olderPost.path">
-        <span>Older</span>
-        <strong>{{ olderPost.title }}</strong>
-      </NuxtLink>
-    </nav>
 
     <section v-if="relatedPosts.length" class="related-section">
       <div class="section-heading">

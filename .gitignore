@@ -5,16 +5,23 @@
 .nitro/
 .cache/
 dist/
+coverage/
 
 # Node dependencies
 node_modules/
 
 # Package manager local stores
 .pnpm-store/
+.npm/
+
+# pnpm temporary probe files
+_tmp_*
+*.tmp
 
 # Logs
 logs/
 *.log
+.nuxt-dev-*.log
 pnpm-debug.log*
 npm-debug.log*
 yarn-debug.log*
@@ -25,6 +32,8 @@ yarn-error.log*
 Thumbs.db
 .fleet
 .idea
+.vscode/
+.agents/
 
 # Accidental local CLI argument workspaces
 --host/
@@ -33,3 +42,7 @@ Thumbs.db
 .env
 .env.*
 !.env.example
+
+# Hosting/local previews
+.vercel/
+.netlify/

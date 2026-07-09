@@ -1,44 +1,37 @@
 # maojl Digital Lab Journal
 
-Personal blog built with Nuxt 4, Nuxt Content, and Nuxt SEO.
+Personal writing site built with Nuxt 4, Nuxt Content 3, Nuxt SEO, TypeScript, and pnpm.
 
-The current interface direction is pixel, retro, and code-forward: dark CRT grid, monospace type, hard borders, terminal panels, and searchable writing.
+The interface direction is pixel, retro, and code-forward: dark CRT grid, monospace type, hard borders, terminal panels, and searchable writing.
 
-## Stack
-
-- Nuxt 4
-- Nuxt Content 3
-- Nuxt SEO
-- TypeScript
-- pnpm
-
-## Local Development
-
-Install dependencies:
+## Scripts
 
 ```bash
 pnpm install
-```
-
-Run the dev server:
-
-```bash
 pnpm dev
+pnpm typecheck
+pnpm build
 ```
 
-Run on the workspace preview port when needed:
+`pnpm dev` is pinned to:
 
-```bash
-pnpm exec nuxt dev --host 127.0.0.1 --port 3010
+```text
+http://127.0.0.1:3010/
 ```
 
-## Content Structure
+## Project Layout
 
-Long articles live in `content/blog`.
+- `app/layouts/default.vue`: global shell, header, footer, and primary navigation.
+- `app/assets/css/main.css`: global visual system and responsive layout rules.
+- `app/pages`: route pages for home, blog, notes, archive, search, and about.
+- `content/blog`: long-form articles.
+- `content/notes`: shorter notes.
+- `content.config.ts`: Nuxt Content collection schema.
+- `nuxt.config.ts`: Nuxt, Content, and SEO module configuration.
 
-Short notes live in `content/notes`.
+## Writing
 
-Each entry should include frontmatter like:
+Each content entry should include frontmatter like:
 
 ```yaml
 ---
@@ -54,23 +47,35 @@ readingTime: 5 min read
 ---
 ```
 
-Set `draft: true` to hide an entry from list, search, and archive queries.
+Use `draft: true` to hide an entry from list, search, and archive queries.
 
-## Visual Notes
+## Visual Rules
 
-Global styling lives in `app/assets/css/main.css`.
-
-The main UI rules are:
-
-- Keep the pixel-terminal language: square edges, hard borders, no soft cards.
-- Keep content readable on narrow screens down to 320px.
+- Keep the pixel-terminal language: square edges, hard borders, terminal marks, no soft card aesthetic.
+- Keep blog and notes detail pages aligned to the article content column.
+- Keep readable spacing on small screens down to 320px.
 - Keep navigation stable across Home, Blog, Notes, About, Archive, and Search.
 
-## Verification
+## pnpm Notes
+
+pnpm workspace settings live in `pnpm-workspace.yaml`.
+
+- `onlyBuiltDependencies` / `allowBuilds` allow native install scripts used by Nuxt dependencies.
+- `minimumReleaseAgeExclude` records trusted packages that were newer than pnpm's release-age policy at install time.
+- `verifyDepsBeforeRun: false` keeps `pnpm dev` from auto-installing dependencies before startup.
+
+If a future dependency update introduces native build-script prompts, run:
 
 ```bash
-pnpm exec nuxi typecheck
-pnpm run build
+pnpm approve-builds --all
 ```
 
-Generated Nuxt, Content, build, and local package-store outputs are ignored by `.gitignore`.
+## Local Cleanup
+
+Generated Nuxt, Content, build, package-store, coverage, log, editor, and hosting preview outputs are ignored by `.gitignore`.
+
+If Nuxt Content pages return 404 after running `pnpm typecheck`, restart the dev server:
+
+```bash
+pnpm dev
+```

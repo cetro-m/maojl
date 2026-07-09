@@ -2,7 +2,6 @@ import { defineCollection, defineContentConfig } from '@nuxt/content'
 import {
   defineOgImageSchema,
   defineRobotsSchema,
-  defineSchemaOrgSchema,
   defineSitemapSchema,
 } from '@nuxtjs/seo/content'
 import { z } from 'zod'
@@ -17,7 +16,6 @@ const articleSchema = z.object({
   draft: z.boolean().default(false),
   readingTime: z.string().optional(),
   ogImage: defineOgImageSchema({ z }),
-  schemaOrg: defineSchemaOrgSchema({ z }),
   robots: defineRobotsSchema({ z }),
   sitemap: defineSitemapSchema({ z }),
   head: z.object({
