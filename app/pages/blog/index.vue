@@ -37,7 +37,11 @@ const filteredPosts = computed(() => {
 
 useSeoMeta({
   title: 'Blog',
-  description: 'Engineering notes, system thinking, and digital experiments.',
+  description: 'Longer posts about development, Nuxt Content, interface design, tools, games, anime, and personal systems.',
+  ogTitle: 'Blog',
+  ogDescription: 'A searchable archive of longer thoughts from maojl: code, design, tools, games, anime, and systems.',
+  ogType: 'website',
+  twitterCard: 'summary_large_image',
 })
 </script>
 
@@ -45,10 +49,10 @@ useSeoMeta({
   <div class="content-page">
     <section class="page-hero compact">
       <p class="eyebrow">Blog Index</p>
-      <h1>Articles as a searchable workbench.</h1>
+      <h1>A SEARCHABLE ARCHIVE <br> FOR LONGER THOUGHTS.</h1>
       <p>
-        Long-form records for engineering decisions, interface experiments, and systems thinking.
-        Filter by tag when you want a narrower signal.
+        Development notes, game records, anime impressions, tool reviews, and other entries that need more room than a
+        quick note.
       </p>
     </section>
 
@@ -60,13 +64,8 @@ useSeoMeta({
         </div>
 
         <div class="filter-list">
-          <NuxtLink
-            v-for="tag in allTags"
-            :key="tag"
-            class="filter-chip"
-            :class="{ active: activeTag === tag }"
-            :to="{ path: '/blog', query: { tag } }"
-          >
+          <NuxtLink v-for="tag in allTags" :key="tag" class="filter-chip" :class="{ active: activeTag === tag }"
+            :to="{ path: '/blog', query: { tag } }">
             <span>#{{ tag }}</span>
             <span>{{ tagCounts.get(tag) }}</span>
           </NuxtLink>

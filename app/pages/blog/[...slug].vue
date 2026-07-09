@@ -64,6 +64,13 @@ const relatedPosts = computed(() => {
 useSeoMeta({
   title: () => article.value.title,
   description: () => article.value.description,
+  ogTitle: () => article.value.title,
+  ogDescription: () => article.value.description,
+  ogType: 'article',
+  articlePublishedTime: () => article.value.date,
+  articleSection: () => article.value.category,
+  articleTag: () => article.value.tags,
+  twitterCard: 'summary_large_image',
 })
 </script>
 

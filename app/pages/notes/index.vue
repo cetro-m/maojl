@@ -8,7 +8,11 @@ const { data: notes } = await useAsyncData('notes:index', () =>
 
 useSeoMeta({
   title: 'Notes',
-  description: 'Short observations, experiment logs, and workbench notes.',
+  description: 'Short notes for task logs, debugging results, game records, anime impressions, tool finds, links, lists, and questions.',
+  ogTitle: 'Notes',
+  ogDescription: 'Fragments from code, play, tools, and life: short observations, task lists, links, and saved ideas.',
+  ogType: 'website',
+  twitterCard: 'summary_large_image',
 })
 </script>
 
@@ -16,8 +20,9 @@ useSeoMeta({
   <div class="content-page">
     <section class="page-hero compact">
       <p class="eyebrow">Field Notes</p>
-      <h1>Signals before they become essays.</h1>
-      <p>Short notes keep the bench warm: a debugging result, a design observation, or a question still fermenting.</p>
+      <h1>FRAGMENTS FROM CODE,PLAY,TOOLS,<br>AND LIFE.</h1>
+      <p>Small entries for debugging results, game logs, anime impressions, tool finds, links, lists, and questions
+        still taking shape.</p>
     </section>
 
     <div class="notes-grid">

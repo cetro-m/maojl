@@ -9,8 +9,8 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
   site: {
     url: process.env.NUXT_SITE_URL || 'https://maojl.dev',
-    name: 'maojl',
-    description: 'A personal digital lab for engineering notes, interface craft, and system thinking.',
+    name: 'MAOJL.XYZ',
+    description: 'A personal logbook for code notes, game records, anime impressions, useful tools, task lists, and everyday thoughts.',
     defaultLocale: 'zh-CN',
     indexable: process.env.NUXT_SITE_INDEXABLE === 'true',
     trailingSlash: false,
@@ -28,7 +28,7 @@ export default defineNuxtConfig({
   },
   app: {
     head: {
-      titleTemplate: '%s | maojl',
+      titleTemplate: '%s | MAOJL.XYZ',
       htmlAttrs: {
         lang: 'zh-CN',
       },
@@ -36,8 +36,10 @@ export default defineNuxtConfig({
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
         {
           name: 'description',
-          content: 'A personal digital lab for engineering notes, interface craft, and system thinking.',
+          content: 'A personal logbook for code notes, game records, anime impressions, useful tools, task lists, and everyday thoughts.',
         },
+        { property: 'og:site_name', content: 'MAOJL.XYZ' },
+        { name: 'twitter:card', content: 'summary_large_image' },
       ],
     },
   },

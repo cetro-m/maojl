@@ -51,7 +51,11 @@ const resultLabel = computed(() => {
 
 useSeoMeta({
   title: 'Search',
-  description: 'Search articles and field notes from the maojl digital lab.',
+  description: 'Search maojl articles and notes by phrase, tag, topic, tool, game, anime, task, or project fragment.',
+  ogTitle: 'Search',
+  ogDescription: 'Find posts, notes, tools, game logs, anime thoughts, task lists, and old fragments from the personal logbook.',
+  ogType: 'website',
+  twitterCard: 'summary_large_image',
 })
 </script>
 
@@ -59,21 +63,15 @@ useSeoMeta({
   <div class="content-page">
     <section class="page-hero compact">
       <p class="eyebrow">Search</p>
-      <h1>Find a signal by phrase, tag, or category.</h1>
-      <p>Search covers article and note metadata today: titles, descriptions, categories, and tags.</p>
+      <h1>SEARCH <br> THE PERSONAL LOGBOOK.</h1>
+      <p>Find posts, notes, tools, game logs, anime thoughts, and old fragments by phrase, tag, or topic.</p>
     </section>
 
     <section class="utility-layout">
       <div class="search-panel">
         <label class="search-label" for="content-search">Query</label>
-        <input
-          id="content-search"
-          v-model="searchTerm"
-          class="search-input"
-          type="search"
-          autocomplete="off"
-          placeholder="Try nuxt, design, system..."
-        >
+        <input id="content-search" v-model="searchTerm" class="search-input" type="search" autocomplete="off"
+          placeholder="Try tag, design, system...">
         <p class="list-status">{{ resultLabel }}</p>
       </div>
 

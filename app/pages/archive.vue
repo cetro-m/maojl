@@ -54,7 +54,11 @@ const archiveGroups = computed(() => {
 
 useSeoMeta({
   title: 'Archive',
-  description: 'A chronological archive of articles and field notes.',
+  description: 'A chronological archive of maojl articles and notes, grouped by year and month for quick revisiting.',
+  ogTitle: 'Archive',
+  ogDescription: 'Browse the complete timeline of code logs, game records, anime thoughts, tools, notes, and daily fragments.',
+  ogType: 'website',
+  twitterCard: 'summary_large_image',
 })
 </script>
 
@@ -62,8 +66,9 @@ useSeoMeta({
   <div class="content-page">
     <section class="page-hero compact">
       <p class="eyebrow">Archive</p>
-      <h1>A chronological map of the lab notebook.</h1>
-      <p>Everything published here, grouped by year and month so the writing trail stays inspectable.</p>
+      <h1>A TIMELINE OF <br> EVERYTHING WORTH KEEPING.</h1>
+      <p>All posts and notes are grouped by year and month, so code logs, game records, anime thoughts, tools, and daily
+        fragments stay easy to revisit.</p>
     </section>
 
     <section class="archive-timeline">

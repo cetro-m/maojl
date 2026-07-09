@@ -1,7 +1,11 @@
 <script setup lang="ts">
 useSeoMeta({
-  title: 'About',
-  description: 'About maojl and the digital lab journal.',
+  title: 'About maojl',
+  description: 'About maojl, a personal logbook for things built, played, watched, tested, and saved for later.',
+  ogTitle: 'About maojl',
+  ogDescription: 'A small digital base for code, games, anime, tools, notes, and personal systems.',
+  ogType: 'profile',
+  twitterCard: 'summary_large_image',
 })
 </script>
 
@@ -9,19 +13,22 @@ useSeoMeta({
   <div class="content-page">
     <section class="page-hero compact">
       <p class="eyebrow">About</p>
-      <h1>A small digital lab for reusable engineering judgment.</h1>
+      <h1>A SMALL DIGITAL BASE <br> FOR CODE,PLAY,TOOLS,<br>AND THOUGHTS.</h1>
       <p>
-        This site keeps long-form articles, short build notes, and interface experiments in one inspectable place.
+        This site keeps development notes, game logs, useful tools, and everyday discoveries in one searchable place.
       </p>
     </section>
 
     <section class="about-layout">
       <div class="about-panel about-panel-primary">
+        <figure class="about-visual">
+          <img src="/images/about-pixel-art.svg" alt="Pixel art trio of wandering samurai" loading="lazy">
+        </figure>
         <p class="sidebar-title">Profile</p>
         <h2>maojl</h2>
         <p>
-          Frontend and systems notes, written as working memory: decisions, tradeoffs, patterns, and the details
-          that become useful again later.
+          A personal logbook for things I build, play, watch, test, and keep thinking about: code, games, anime, tools,
+          and notes that may become useful again later.
         </p>
       </div>
 
@@ -35,48 +42,53 @@ useSeoMeta({
         <pre><code>$ whoami
 maojl
 
-$ focus --list
+$ interests --list
 frontend craft
-nuxt content
-design systems
-ai-assisted engineering
+games
+anime
+useful tools
+personal systems
 
 $ output
-articles + notes + reusable patterns</code></pre>
+articles + notes + logs + lists</code></pre>
       </div>
 
       <div class="about-panel">
         <p class="sidebar-title">Writing map</p>
         <ul class="signal-list">
           <li>
-            <span>Articles</span>
-            <strong>Long-form decisions and system notes.</strong>
+            <span>BLOG</span>
+            <strong>Longer posts about development, tools, games, anime, and thoughts.</strong>
           </li>
           <li>
-            <span>Notes</span>
-            <strong>Short build logs and observations.</strong>
+            <span>NOTES</span>
+            <strong>Short observations, fixes, links, lists, and things worth saving.</strong>
           </li>
           <li>
-            <span>Archive</span>
-            <strong>A chronological trail for every published entry.</strong>
+            <span>ARCHIVE</span>
+            <strong>A chronological trail for everything published here.</strong>
           </li>
         </ul>
       </div>
 
       <div class="about-panel">
-        <p class="sidebar-title">Colophon</p>
+        <p class="sidebar-title">SKILL TREE</p>
         <ul class="signal-list">
           <li>
-            <span>Stack</span>
-            <strong>Nuxt 4, Nuxt Content, Nuxt SEO.</strong>
+            <span>FRONTEND</span>
+            <strong>Web interfaces, UI systems, and content sites.</strong>
           </li>
           <li>
-            <span>Visual system</span>
-            <strong>Pixel terminal, CRT grid, hard borders.</strong>
+            <span>BACKEND</span>
+            <strong>APIs, CMS, databases, and business logic.</strong>
           </li>
           <li>
-            <span>Publishing mode</span>
-            <strong>Small entries, searchable metadata, stable routes.</strong>
+            <span>SERVER</span>
+            <strong>Linux, Nginx, deployment, CDN, and reliability.</strong>
+          </li>
+          <li>
+            <span>WORKFLOW</span>
+            <strong>Git, scripts, package tools, and AI-assisted work.</strong>
           </li>
         </ul>
       </div>

@@ -11,8 +11,12 @@ const featuredPost = computed(() => posts.value?.find((post) => post.featured) ?
 const recentPosts = computed(() => posts.value?.filter((post) => post.path !== featuredPost.value?.path).slice(0, 4) ?? [])
 
 useSeoMeta({
-  title: 'Digital Lab Journal',
-  description: 'A personal digital lab for engineering notes, interface craft, and system thinking.',
+  title: "MAOJL'S LOG",
+  description: 'A searchable personal logbook for code notes, game records, anime impressions, useful tools, task lists, and everyday thoughts.',
+  ogTitle: "MAOJL'S LOG",
+  ogDescription: 'Code notes, game records, anime impressions, useful tools, task lists, and everyday thoughts from maojl.',
+  ogType: 'website',
+  twitterCard: 'summary_large_image',
 })
 </script>
 
@@ -20,14 +24,14 @@ useSeoMeta({
   <div class="page-stack">
     <section class="hero-section">
       <div class="hero-copy">
-        <p class="eyebrow">Digital Lab Journal</p>
-        <h1>Reusable thinking from daily engineering work.</h1>
+        <p class="eyebrow">MAOJL'S LOG</p>
+        <h1>A LOGBOOK FOR <br> CODE,PLAY,TOOLS,<br>AND THOUGHTS.</h1>
         <p class="hero-text">
-          Notes on system design, frontend craft, AI tooling, and the small decisions that become reusable judgment.
+          Development notes, game records, anime impressions, useful tools, and whatever else seems worth writing down.
         </p>
         <div class="hero-actions">
-          <NuxtLink class="button button-primary" to="/blog">Read articles</NuxtLink>
-          <NuxtLink class="button button-secondary" to="/search">Search notes</NuxtLink>
+          <NuxtLink class="button button-primary" to="/blog">Read</NuxtLink>
+          <NuxtLink class="button button-secondary" to="/search">Search</NuxtLink>
         </div>
       </div>
 
@@ -38,18 +42,18 @@ useSeoMeta({
           <span />
           <strong>journal://maojl</strong>
         </div>
-        <pre><code>$ query latest --scope thinking
-status: collecting signals
-mode: build in public
-stack: nuxt + content
-output: essays, notes, artifacts</code></pre>
+        <pre><code>$ tail -f ./daily.log
+status: writing things down
+scope: code / play / media / tools
+mode: curious by default
+output: notes, logs, thoughts</code></pre>
       </div>
     </section>
 
     <section v-if="featuredPost" class="feature-band">
       <div class="section-heading">
-        <p class="eyebrow">Featured</p>
-        <h2>Current thread</h2>
+        <p class="eyebrow">FEATURED</p>
+        <h2>CURRENTLY EXPLORING</h2>
       </div>
 
       <NuxtLink class="featured-link" :to="featuredPost.path">
@@ -66,8 +70,8 @@ output: essays, notes, artifacts</code></pre>
 
     <section class="bento-section">
       <div class="section-heading">
-        <p class="eyebrow">Recent Dispatches</p>
-        <h2>Recently written</h2>
+        <p class="eyebrow">RECENT LOGS</p>
+        <h2>LATEST ENTRIES</h2>
       </div>
 
       <div class="post-grid">
