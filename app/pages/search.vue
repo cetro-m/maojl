@@ -2,17 +2,11 @@
 const route = useRoute()
 
 const { data: blogPosts } = await useAsyncData('search:blog', () =>
-  queryCollection('blog')
-    .where('draft', '=', false)
-    .order('date', 'DESC')
-    .all(),
+  queryPublishedEntries('blog').all(),
 )
 
 const { data: notes } = await useAsyncData('search:notes', () =>
-  queryCollection('notes')
-    .where('draft', '=', false)
-    .order('date', 'DESC')
-    .all(),
+  queryPublishedEntries('notes').all(),
 )
 
 const searchTerm = ref(typeof route.query.q === 'string' ? route.query.q : '')
@@ -63,7 +57,7 @@ useSeoMeta({
   <div class="content-page">
     <section class="page-hero compact">
       <p class="eyebrow">Search</p>
-      <h1>SEARCH <br> THE PERSONAL LOGBOOK.</h1>
+      <h1>SEARCH THE PERSONAL LOGBOOK.</h1>
       <p>Find posts, notes, tools, game logs, anime thoughts, and old fragments by phrase, tag, or topic.</p>
     </section>
 

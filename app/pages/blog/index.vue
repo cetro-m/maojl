@@ -2,10 +2,7 @@
 const route = useRoute()
 
 const { data: posts } = await useAsyncData('blog:index', () =>
-  queryCollection('blog')
-    .where('draft', '=', false)
-    .order('date', 'DESC')
-    .all(),
+  queryPublishedEntries('blog').all(),
 )
 
 const activeTag = computed(() => {
@@ -49,7 +46,7 @@ useSeoMeta({
   <div class="content-page">
     <section class="page-hero compact">
       <p class="eyebrow">Blog Index</p>
-      <h1>A SEARCHABLE ARCHIVE <br> FOR LONGER THOUGHTS.</h1>
+      <h1>A SEARCHABLE <br> ARCHIVE FOR LONGER THOUGHTS.</h1>
       <p>
         Development notes, game records, anime impressions, tool reviews, and other entries that need more room than a
         quick note.

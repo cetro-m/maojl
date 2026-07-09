@@ -4,6 +4,14 @@ Personal logbook built with Nuxt 4, Nuxt Content 3, Nuxt SEO, TypeScript, and pn
 
 The site collects code notes, game records, anime impressions, useful tools, task lists, and everyday thoughts. The interface direction is pixel, retro, and code-forward: dark CRT grid, monospace type, hard borders, terminal panels, and searchable writing.
 
+## Current Shape
+
+- Content-first Nuxt 4 app using the `app/` directory.
+- Typed Nuxt Content collections for `blog` and `notes`.
+- List, search, archive, and navigation queries select only summary fields so Markdown bodies stay out of index payloads.
+- Static-friendly route rules prerender the public content pages.
+- Local Content SQLite output is written to the OS temp directory, keeping project files clean.
+
 ## Scripts
 
 ```bash
@@ -24,6 +32,7 @@ http://127.0.0.1:3010/
 ## Project Layout
 
 - `app/layouts/default.vue`: global shell, header, footer, and primary navigation.
+- `app/composables/useContentEntries.ts`: shared published-entry queries for list, search, archive, and navigation payloads.
 - `app/assets/css/main.css`: global visual system and responsive layout rules.
 - `app/pages`: route pages for home, blog, notes, archive, search, and about.
 - `app/components/content`: custom MDC/prose components used by Nuxt Content.
@@ -96,6 +105,8 @@ pnpm approve-builds --all
 ## Local Cleanup
 
 Generated Nuxt, Content, build, package-store, coverage, local database, cache, log, editor, and hosting preview outputs are ignored by `.gitignore`.
+
+The ignore rules also cover alternate generated folders such as `.nuxt-*` and `.output-*`, browser test reports, Wrangler previews, and SQLite journal files.
 
 If Nuxt Content pages return 404 after running `pnpm typecheck`, restart the dev server:
 

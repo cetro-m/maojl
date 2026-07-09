@@ -1,13 +1,17 @@
 # Nuxt dev/build outputs
 .output/
+.output-*/
 .data/
 .nuxt/
+.nuxt-*/
 .nitro/
 .cache/
 dist/
 coverage/
 tmp/
 .tmp/
+test-results/
+playwright-report/
 
 # Node dependencies
 node_modules/
@@ -35,6 +39,7 @@ yarn-error.log*
 *.sqlite-*
 *.db
 *.db-*
+*.db-journal
 .eslintcache
 .stylelintcache
 
@@ -57,3 +62,4 @@ Thumbs.db
 # Hosting/local previews
 .vercel/
 .netlify/
+.wrangler/

@@ -1,6 +1,8 @@
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
+const siteDescription = 'A personal logbook for code notes, game records, anime impressions, useful tools, task lists, and everyday thoughts.'
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
@@ -10,10 +12,18 @@ export default defineNuxtConfig({
   site: {
     url: process.env.NUXT_SITE_URL || 'https://maojl.dev',
     name: 'MAOJL.XYZ',
-    description: 'A personal logbook for code notes, game records, anime impressions, useful tools, task lists, and everyday thoughts.',
+    description: siteDescription,
     defaultLocale: 'zh-CN',
     indexable: process.env.NUXT_SITE_INDEXABLE === 'true',
     trailingSlash: false,
+  },
+  routeRules: {
+    '/': { prerender: true },
+    '/about': { prerender: true },
+    '/archive': { prerender: true },
+    '/blog/**': { prerender: true },
+    '/notes/**': { prerender: true },
+    '/search': { prerender: true },
   },
   robots: {
     blockAiBots: false,
@@ -36,7 +46,7 @@ export default defineNuxtConfig({
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
         {
           name: 'description',
-          content: 'A personal logbook for code notes, game records, anime impressions, useful tools, task lists, and everyday thoughts.',
+          content: siteDescription,
         },
         { property: 'og:site_name', content: 'MAOJL.XYZ' },
         { name: 'twitter:card', content: 'summary_large_image' },

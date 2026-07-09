@@ -24,10 +24,7 @@ if (!post.value) {
 const article = computed(() => post.value!)
 
 const { data: publishedPosts } = await useAsyncData('blog:published-navigation', () =>
-  queryCollection('blog')
-    .where('draft', '=', false)
-    .order('date', 'DESC')
-    .all(),
+  queryPublishedNavigation('blog').all(),
 )
 
 const currentIndex = computed(() =>

@@ -1,9 +1,6 @@
 <script setup lang="ts">
 const { data: notes } = await useAsyncData('notes:index', () =>
-  queryCollection('notes')
-    .where('draft', '=', false)
-    .order('date', 'DESC')
-    .all(),
+  queryPublishedEntries('notes').all(),
 )
 
 useSeoMeta({
@@ -20,7 +17,7 @@ useSeoMeta({
   <div class="content-page">
     <section class="page-hero compact">
       <p class="eyebrow">Field Notes</p>
-      <h1>FRAGMENTS FROM CODE,PLAY,TOOLS,<br>AND LIFE.</h1>
+      <h1>FRAGMENTS FROM <br> CODE,PLAY,TOOLS,AND LIFE.</h1>
       <p>Small entries for debugging results, game logs, anime impressions, tool finds, links, lists, and questions
         still taking shape.</p>
     </section>

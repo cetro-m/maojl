@@ -80,7 +80,7 @@ articles + notes + logs + lists</code></pre>
           </li>
           <li>
             <span>BACKEND</span>
-            <strong>APIs, CMS, databases, and business logic.</strong>
+            <strong>API, ERP, CMS, DB, and automation.</strong>
           </li>
           <li>
             <span>SERVER</span>

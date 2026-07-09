@@ -1,8 +1,6 @@
 <script setup lang="ts">
 const { data: posts } = await useAsyncData('home:blog-posts', () =>
-  queryCollection('blog')
-    .where('draft', '=', false)
-    .order('date', 'DESC')
+  queryPublishedEntries('blog')
     .limit(6)
     .all(),
 )
@@ -30,8 +28,8 @@ useSeoMeta({
           Development notes, game records, anime impressions, useful tools, and whatever else seems worth writing down.
         </p>
         <div class="hero-actions">
-          <NuxtLink class="button button-primary" to="/blog">Read</NuxtLink>
-          <NuxtLink class="button button-secondary" to="/search">Search</NuxtLink>
+          <NuxtLink class="button button-primary" to="/blog">Read Blog</NuxtLink>
+          <NuxtLink class="button button-secondary" to="/search">Search Something</NuxtLink>
         </div>
       </div>
 

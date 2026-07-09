@@ -10,17 +10,11 @@ type ArchiveEntry = {
 }
 
 const { data: blogPosts } = await useAsyncData('archive:blog', () =>
-  queryCollection('blog')
-    .where('draft', '=', false)
-    .order('date', 'DESC')
-    .all(),
+  queryPublishedEntries('blog').all(),
 )
 
 const { data: notes } = await useAsyncData('archive:notes', () =>
-  queryCollection('notes')
-    .where('draft', '=', false)
-    .order('date', 'DESC')
-    .all(),
+  queryPublishedEntries('notes').all(),
 )
 
 const entries = computed<ArchiveEntry[]>(() =>
