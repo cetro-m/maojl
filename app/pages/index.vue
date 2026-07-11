@@ -28,7 +28,7 @@ useSeoMeta({
     <section class="hero-section">
       <div class="hero-copy">
         <p class="eyebrow">MAOJL'S LOG</p>
-        <h1>A LOGBOOK FOR <br> CODE,PLAY,TOOLS,<br>AND THOUGHTS.</h1>
+        <h1>A LOGBOOK FOR CODE, PLAY, TOOLS, AND THOUGHTS.</h1>
         <p class="hero-text">
           Development notes, game records, anime impressions, useful tools, and whatever else seems worth writing down.
         </p>
@@ -84,7 +84,7 @@ output: notes, logs, thoughts</code></pre>
             <h3>{{ post.title }}</h3>
             <p>{{ post.description }}</p>
             <div class="tag-row">
-              <span v-for="tag in post.tags" :key="tag">#{{ tag }}</span>
+              <span v-for="tag in post.tags" :key="tag"><span class="tag-hash" aria-hidden="true">#</span>{{ tag }}</span>
             </div>
           </article>
         </NuxtLink>

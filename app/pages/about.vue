@@ -17,8 +17,8 @@ useSeoMeta({
 <template>
   <div class="content-page">
     <section class="page-hero compact">
-      <p class="eyebrow">About</p>
-      <h1>A SMALL DIGITAL BASE <br> FOR CODE,PLAY,TOOLS,<br>AND THOUGHTS.</h1>
+      <p class="eyebrow">About Me</p>
+      <h1>A SMALL DIGITAL BASE FOR <br> CODE, PLAY, TOOLS, AND THOUGHTS.</h1>
       <p>
         This site keeps development notes, game logs, useful tools, and everyday discoveries in one searchable place.
       </p>

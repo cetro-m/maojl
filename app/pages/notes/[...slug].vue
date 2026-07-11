@@ -62,7 +62,7 @@ useSeoMeta({
       <h1>{{ article.title }}</h1>
       <p>{{ article.description }}</p>
       <div class="tag-row">
-        <span v-for="tag in article.tags" :key="tag">#{{ tag }}</span>
+        <span v-for="tag in article.tags" :key="tag"><span class="tag-hash" aria-hidden="true">#</span>{{ tag }}</span>
       </div>
     </header>
 

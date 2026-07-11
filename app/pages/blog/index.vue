@@ -68,7 +68,7 @@ useSeoMeta({
         <div class="filter-list">
           <NuxtLink v-for="tag in allTags" :key="tag" class="filter-chip" :class="{ active: activeTag === tag }"
             :to="{ path: '/blog', query: { tag } }">
-            <span>#{{ tag }}</span>
+            <span><span class="tag-hash" aria-hidden="true">#</span>{{ tag }}</span>
             <span>{{ tagCounts.get(tag) }}</span>
           </NuxtLink>
         </div>
@@ -91,7 +91,7 @@ useSeoMeta({
             <h2>{{ post.title }}</h2>
             <p>{{ post.description }}</p>
             <div class="tag-row">
-              <span v-for="tag in post.tags" :key="tag">#{{ tag }}</span>
+              <span v-for="tag in post.tags" :key="tag"><span class="tag-hash" aria-hidden="true">#</span>{{ tag }}</span>
             </div>
           </article>
         </NuxtLink>

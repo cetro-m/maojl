@@ -38,6 +38,13 @@ useSeoMeta({
       </div>
     </section>
 
+    <nav v-if="publishedReleases.length" class="release-jump-nav" aria-label="Jump to release">
+      <span>Jump to</span>
+      <a v-for="release in publishedReleases" :key="release.version" :href="`#${release.version}`">
+        {{ release.version }}
+      </a>
+    </nav>
+
     <section v-if="publishedReleases.length" class="release-stream" aria-label="Release history">
       <article v-for="(release, index) in publishedReleases" :id="release.version" :key="release.path"
         class="release-entry" :class="{ 'is-latest': release.latest || index === 0 }">

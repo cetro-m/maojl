@@ -59,6 +59,16 @@ Thumbs.db
 .env
 .env.*
 !.env.example
+*.pem
+*.key
+*.crt
+*.p12
+
+# Local SSH and deployment state
+.ssh/
+/deployments/
+/releases/
+/current
 
 # Hosting/local previews
 .vercel/

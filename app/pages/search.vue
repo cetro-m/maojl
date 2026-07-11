@@ -19,6 +19,7 @@ const { data: noteSections } = await useAsyncData('search:note-sections', () =>
 )
 
 const searchTerm = ref(typeof route.query.q === 'string' ? route.query.q : '')
+let syncingFromRoute = false
 
 const entries = computed(() => [
   ...(blogPosts.value ?? []).map((item) => ({ ...item, collectionLabel: 'Article' })),
@@ -66,6 +67,11 @@ const results = computed(() => {
 let syncTimer: ReturnType<typeof setTimeout> | undefined
 
 watch(searchTerm, (value) => {
+  if (syncingFromRoute) {
+    syncingFromRoute = false
+    return
+  }
+
   clearTimeout(syncTimer)
   syncTimer = setTimeout(() => {
     const query = value.trim()
@@ -77,6 +83,18 @@ watch(searchTerm, (value) => {
     })
   }, 250)
 })
+
+watch(
+  () => route.query.q,
+  (value) => {
+    const nextValue = typeof value === 'string' ? value : ''
+
+    if (nextValue !== searchTerm.value) {
+      syncingFromRoute = true
+      searchTerm.value = nextValue
+    }
+  },
+)
 
 onBeforeUnmount(() => clearTimeout(syncTimer))
 
@@ -130,7 +148,7 @@ useSeoMeta({
             <h2>{{ entry.title }}</h2>
             <p>{{ entry.description }}</p>
             <div class="tag-row">
-              <span v-for="tag in entry.tags" :key="tag">#{{ tag }}</span>
+              <span v-for="tag in entry.tags" :key="tag"><span class="tag-hash" aria-hidden="true">#</span>{{ tag }}</span>
             </div>
           </article>
         </NuxtLink>

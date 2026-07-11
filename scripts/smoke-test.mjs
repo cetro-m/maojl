@@ -27,8 +27,9 @@ for (const route of routes) {
 }
 
 const assets = [
+  '/fonts/vt323-latin-400-normal.woff2',
   '/fonts/zpix.woff2',
-  '/images/about-pixel-art.png',
+  '/images/about-pixel-art.jpg',
 ]
 
 for (const asset of assets) {

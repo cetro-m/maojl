@@ -54,7 +54,7 @@ critical font/image assets, and the 404 boundary. Override its target with
 - `content/notes`: shorter notes.
 - `content/releases`: structured release records.
 - `public/fonts`: production webfonts served without a bundler transform.
-- `public/images/about-pixel-art.png`: optimized About page pixel-art profile visual.
+- `public/images/about-pixel-art.jpg`: optimized About page pixel-art profile visual.
 - `scripts/smoke-test.mjs`: public-route and SEO endpoint smoke test.
 - `server/routes/rss.xml.ts`: RSS 2.0 feed endpoint.
 - `docs/DEPLOYMENT.md`: Linux, systemd, Nginx, HTTPS, updates, and rollback guide.
@@ -136,8 +136,10 @@ The ignore rules also cover alternate generated folders such as `.nuxt-*` and `.
 
 ## Deployment
 
-The recommended production layout is a Node 22 Nitro server bound to
-`127.0.0.1:3010`, managed by systemd and exposed through Nginx with HTTPS.
+The recommended production layout is an isolated Node/Nitro service bound to
+`127.0.0.1:3010`, managed by systemd and exposed through the existing Nginx
+installation. The target host already runs another production application on
+port 3000, so its files, process, service, and virtual hosts must not be reused.
 
 Follow [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) for the complete first deployment,
 environment configuration, verification, update, and rollback procedure.

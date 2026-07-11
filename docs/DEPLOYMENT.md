@@ -1,71 +1,73 @@
-# MAOJL.XYZ 服务器部署指南
+# MAOJL.XYZ 部署指南
 
-本文档使用以下生产结构：
+本文档基于 2026-07-12 对目标主机 `47.99.215.193` 的只读检查。检查期间未修改文件、服务、进程或网络配置。
+
+## 服务器现状
+
+| 项目 | 已确认状态 |
+| --- | --- |
+| 系统 | Ubuntu 22.04.5 LTS（x86_64） |
+| Node.js | v24.15.0，路径 `/usr/bin/node` |
+| pnpm | 10.33.0，路径 `/usr/bin/pnpm` |
+| Nginx | 1.18.0，监听 80/443 |
+| 现有应用 | `/var/www/site/web/.output/server/index.mjs`，监听 3000 |
+| 现有域名 | `bioer.com`、`bioer.com.cn`、`en.bioer.com`、`cms.bioer.com` 等 |
+| MAOJL 服务 | 尚无 `maojl.service`，尚无 `/var/www/maojl` |
+| 计划端口 | 3010 当前未监听 |
+| 域名解析 | 主机当前无法解析 `maojl.xyz`；上线前必须先修复 DNS |
+
+现有 Bioer 应用是独立生产系统。部署 MAOJL 时不得复用或覆盖其目录、3000 端口、systemd 单元和 Nginx 配置。
+
+## 目标结构
 
 ```text
-Internet -> Nginx :80/:443 -> Nuxt Nitro 127.0.0.1:3010
+Internet -> Nginx :80/:443 -> MAOJL Nitro 127.0.0.1:3010
                               systemd: maojl.service
+                              files: /var/www/maojl
+
+                            -> existing Bioer app 127.0.0.1:3000 (保持不变)
 ```
 
-项目包含 RSS 服务端路由和动态 OG 图片能力，因此推荐使用 Node.js
-服务器部署，而不是只上传静态文件。
+项目要求 Node.js >=22 和 pnpm >=11。服务器 Node 版本满足要求，但 pnpm 10.33.0 不满足 `package.json` 中的版本约束；正式部署前应为本项目准备 pnpm 11.11.0。不要在未评估现有应用的情况下直接替换系统级 pnpm。
 
-## 1. 服务器要求
-
-- 一台 Ubuntu 22.04/24.04 或兼容的 Linux 服务器。
-- 已解析到服务器公网 IP 的域名，例如 `maojl.xyz` 和 `www.maojl.xyz`。
-- Node.js 22 或更新的偶数版本。
-- pnpm 11、Git、Nginx。
-- 能使用 sudo 的部署账号。
-
-安装基础软件：
+建议使用 Corepack 为部署会话激活固定版本：
 
 ```bash
-sudo apt update
-sudo apt install -y git nginx curl
-
-curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
-sudo apt install -y nodejs
-
-sudo corepack enable
 corepack prepare pnpm@11.11.0 --activate
-
-node --version
 pnpm --version
 ```
 
-## 2. 获取项目
+## 上线前置条件
 
-以下示例把项目放在 `/var/www/maojl`，把仓库地址替换为你的实际地址：
+1. 将 `maojl.xyz`（以及需要时的 `www.maojl.xyz`）A/AAAA 记录指向目标主机，并确认服务器可解析该域名。
+2. 确认安全组和防火墙允许 80/443；不要开放 3010 到公网。
+3. 备份将要修改的 Nginx 配置，并记录现有配置检查结果。
+4. 确认 `/var/www/maojl`、`maojl.service` 和 3010 端口仍未被占用。
+
+只读复核命令：
 
 ```bash
-sudo mkdir -p /var/www/maojl
-sudo chown -R "$USER":"$USER" /var/www/maojl
+getent hosts maojl.xyz
+ss -lntp | grep -E ':(80|443|3000|3010) '
+systemctl status nginx --no-pager
+systemctl status maojl --no-pager
+nginx -t
+```
 
-git clone <YOUR_GIT_REPOSITORY_URL> /var/www/maojl
+## 首次部署
+
+以下命令会修改服务器，只能在明确批准的维护窗口执行。
+
+```bash
+install -d -o www-data -g www-data -m 755 /var/www/maojl
+sudo -u www-data git clone https://github.com/cetro-m/maojl.git /var/www/maojl
 cd /var/www/maojl
-pnpm install --frozen-lockfile
+sudo -u www-data pnpm install --frozen-lockfile
 ```
 
-不要把 Windows 上的 `node_modules` 或 `.output` 上传到 Linux。原生依赖必须
-在目标服务器上安装和构建。
+不要上传 Windows 本机生成的 `node_modules`、`.nuxt*` 或 `.output*`；原生依赖必须在 Linux 服务器安装和构建。
 
-## 3. 配置生产环境变量
-
-生成 OG 图片签名密钥：
-
-```bash
-openssl rand -hex 32
-```
-
-创建仅 root 和服务账号可读的环境文件：
-
-```bash
-sudo install -d -m 750 /etc/maojl
-sudo nano /etc/maojl/maojl.env
-```
-
-写入：
+创建 `/etc/maojl/maojl.env`：
 
 ```dotenv
 NODE_ENV=production
@@ -73,55 +75,30 @@ HOST=127.0.0.1
 PORT=3010
 NUXT_SITE_URL=https://maojl.xyz
 NUXT_SITE_INDEXABLE=true
-NUXT_OG_IMAGE_SECRET=<刚才生成的64位十六进制密钥>
+NUXT_OG_IMAGE_SECRET=<64-character-random-hex-secret>
 ```
 
-设置权限：
+建议权限：目录 `root:www-data 0750`，环境文件 `root:www-data 0640`。密钥可以用 `openssl rand -hex 32` 生成，禁止提交到 Git。
 
-```bash
-sudo chmod 640 /etc/maojl/maojl.env
-sudo chown root:www-data /etc/maojl/maojl.env
-```
-
-`NUXT_SITE_URL` 和 `NUXT_SITE_INDEXABLE` 会影响预渲染页面、canonical、robots
-和 sitemap，必须在执行构建命令之前加载。所有滚动部署实例必须使用同一个
-`NUXT_OG_IMAGE_SECRET`。
-
-## 4. 构建生产版本
+构建时必须先加载生产环境变量，因为站点 URL 和可索引状态会进入预渲染输出：
 
 ```bash
 cd /var/www/maojl
 set -a
 source /etc/maojl/maojl.env
 set +a
-
-pnpm typecheck
-pnpm build
+sudo -E -u www-data pnpm validate
 ```
 
-Nuxt 的生产入口会生成在：
+## systemd 单元
 
-```text
-/var/www/maojl/.output/server/index.mjs
-```
-
-首次启动前可直接检查：
-
-```bash
-node .output/server/index.mjs
-```
-
-然后在另一个终端访问 `http://127.0.0.1:3010`。确认后按 Ctrl+C 停止，交给
-systemd 管理。
-
-## 5. 配置 systemd
-
-创建 `/etc/systemd/system/maojl.service`：
+`/etc/systemd/system/maojl.service`：
 
 ```ini
 [Unit]
 Description=MAOJL.XYZ Nuxt server
-After=network.target
+After=network-online.target
+Wants=network-online.target
 
 [Service]
 Type=simple
@@ -134,7 +111,6 @@ Restart=on-failure
 RestartSec=5
 TimeoutStopSec=20
 KillSignal=SIGTERM
-
 NoNewPrivileges=true
 PrivateTmp=true
 ProtectSystem=full
@@ -145,28 +121,11 @@ ReadWritePaths=/var/www/maojl
 WantedBy=multi-user.target
 ```
 
-让运行账号读取项目，然后启动服务：
+首次启用前先确认 `ExecStart`、工作目录、用户和 3010 端口均正确，再执行 `daemon-reload` 和启动操作。
 
-```bash
-sudo chown -R www-data:www-data /var/www/maojl
-sudo systemctl daemon-reload
-sudo systemctl enable --now maojl
-sudo systemctl status maojl
-sudo journalctl -u maojl -n 100 --no-pager
-```
+## Nginx 独立站点
 
-本机验证：
-
-```bash
-curl -I http://127.0.0.1:3010/
-curl -I http://127.0.0.1:3010/robots.txt
-curl -I http://127.0.0.1:3010/sitemap.xml
-curl -I http://127.0.0.1:3010/rss.xml
-```
-
-## 6. 配置 Nginx
-
-创建 `/etc/nginx/sites-available/maojl.xyz`：
+新增独立文件 `/etc/nginx/sites-available/maojl.xyz`，不要编辑或复用现有 Bioer 站点块：
 
 ```nginx
 server {
@@ -174,17 +133,13 @@ server {
     listen [::]:80;
     server_name maojl.xyz www.maojl.xyz;
 
-    client_max_body_size 2m;
-
     location / {
         proxy_pass http://127.0.0.1:3010;
         proxy_http_version 1.1;
-
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
-
         proxy_connect_timeout 10s;
         proxy_read_timeout 60s;
         proxy_send_timeout 60s;
@@ -192,131 +147,57 @@ server {
 }
 ```
 
-启用并检查配置：
+启用前后都运行 `nginx -t`。DNS 生效且 HTTP 验证通过后，再使用 Certbot 为 MAOJL 域名单独签发证书；不得改动 Bioer 证书或站点。
+
+## 验收
+
+先验证应用回环地址，再验证域名：
 
 ```bash
-sudo ln -s /etc/nginx/sites-available/maojl.xyz /etc/nginx/sites-enabled/maojl.xyz
-sudo nginx -t
-sudo systemctl reload nginx
-```
-
-此时先访问 `http://maojl.xyz`，确认 Nginx 能转发到 Nuxt。
-
-## 7. 配置 HTTPS
-
-使用 Certbot：
-
-```bash
-sudo apt install -y certbot python3-certbot-nginx
-sudo certbot --nginx -d maojl.xyz -d www.maojl.xyz
-sudo certbot renew --dry-run
-```
-
-Certbot 会配置证书和 HTTP 到 HTTPS 跳转。完成后检查：
-
-```bash
+curl -I http://127.0.0.1:3010/
 curl -I https://maojl.xyz/
 curl -I https://maojl.xyz/robots.txt
 curl -I https://maojl.xyz/sitemap.xml
 curl -I https://maojl.xyz/rss.xml
-```
 
-## 8. 上线验收
-
-在项目目录运行生产冒烟测试：
-
-```bash
 cd /var/www/maojl
 SMOKE_BASE_URL=https://maojl.xyz pnpm test:smoke
 ```
 
-浏览器中继续确认：
+同时确认：canonical、Open Graph、sitemap 和 RSS 均使用正式 HTTPS 域名；不存在页面返回 404；现有 Bioer 域名和 3000 端口服务不受影响。
 
-- 首页、Blog、Notes、Releases、Archive 和 Search 可访问。
-- 文章详情页与不存在的页面分别返回 200 和 404。
-- `/robots.txt` 允许索引，且引用正确 sitemap。
-- `/sitemap.xml` 中 URL 使用正式 HTTPS 域名。
-- `/rss.xml` 中链接使用正式域名。
-- 页面源码中的 canonical、Open Graph 图片和结构化数据使用正式域名。
-- 手机宽度下导航没有溢出。
+## 更新与回滚
 
-## 9. 日常更新
+更新前记录当前提交，并先在独立目录构建。最稳妥的方式是使用带时间戳的 release 目录和 `current` 软链接原子切换，避免覆盖正在运行的 `.output`。
 
-直接在当前目录更新：
+若仍采用单工作目录，至少执行：
 
 ```bash
 cd /var/www/maojl
+git status --short
+git rev-parse HEAD
 sudo -u www-data git pull --ff-only
 sudo -u www-data pnpm install --frozen-lockfile
-
 set -a
 source /etc/maojl/maojl.env
 set +a
-sudo -E -u www-data pnpm typecheck
-sudo -E -u www-data pnpm build
-
-sudo systemctl restart maojl
-sudo systemctl status maojl
+sudo -E -u www-data pnpm validate
+systemctl restart maojl
+systemctl status maojl --no-pager
 SMOKE_BASE_URL=https://maojl.xyz pnpm test:smoke
 ```
 
-更稳妥的生产方式是构建到带时间戳的 release 目录，通过 `current` 软链接切换；
-这样构建失败不会覆盖正在运行的版本。
+不要使用 `git reset --hard` 清除服务器上的未知改动。回滚应切换到已记录的已知良好提交或 release 目录，重新启动 `maojl`，再执行冒烟测试。
 
-## 10. 回滚
-
-如果使用普通 Git 工作目录，可以回退到已确认的提交并重新构建：
+## 常用只读排查
 
 ```bash
-cd /var/www/maojl
-git log --oneline -n 10
-git switch --detach <KNOWN_GOOD_COMMIT>
-
-set -a
-source /etc/maojl/maojl.env
-set +a
-pnpm install --frozen-lockfile
-pnpm build
-sudo systemctl restart maojl
-```
-
-不要使用 `git reset --hard` 回滚服务器上的未知改动。推荐在部署前记录当前提交：
-
-```bash
-git rev-parse HEAD
-```
-
-## 11. 常用排障命令
-
-```bash
-# Nuxt 服务日志
-sudo journalctl -u maojl -f
-
-# Nginx 错误日志
-sudo tail -f /var/log/nginx/error.log
-
-# 端口监听
-sudo ss -lntp | grep 3010
-
-# 服务和反向代理检查
+systemctl status maojl --no-pager
+journalctl -u maojl -n 100 --no-pager
+ss -lntp | grep 3010
 curl -I http://127.0.0.1:3010/
-curl -I https://maojl.xyz/
-
-# 配置检查
-sudo nginx -t
-sudo systemctl status maojl
+tail -n 100 /var/log/nginx/error.log
+nginx -t
 ```
 
-常见问题：
-
-- 页面可以打开但 canonical 仍是旧域名：构建前没有加载生产环境变量，重新构建。
-- robots 禁止索引：确认 `NUXT_SITE_INDEXABLE=true` 并重新构建。
-- OG 图片部署后间歇失效：所有实例没有使用相同的 `NUXT_OG_IMAGE_SECRET`。
-- Nginx 返回 502：Nuxt 服务没有运行、端口不一致或 systemd 启动失败。
-- 原生模块加载失败：不要跨操作系统复制 `node_modules`，在服务器重新安装依赖。
-
-## 官方参考
-
-- Nuxt Deployment: https://nuxt.com/docs/4.x/getting-started/deployment
-- Nuxt Installation: https://nuxt.com/docs/4.x/getting-started/installation/
-- Nginx Proxy Module: https://nginx.org/en/docs/http/ngx_http_proxy_module.html
+任何变更操作都应限定在 `/var/www/maojl`、`maojl.service` 和 MAOJL 自己的 Nginx 站点文件内。

@@ -22,7 +22,7 @@ useSeoMeta({
   <div class="content-page">
     <section class="page-hero compact">
       <p class="eyebrow">Field Notes</p>
-      <h1>FRAGMENTS FROM <br> CODE,PLAY,TOOLS,AND LIFE.</h1>
+      <h1>FRAGMENTS FROM <br> CODE, PLAY, TOOLS, AND LIFE.</h1>
       <p>Small entries for debugging results, game logs, anime impressions, tool finds, links, lists, and questions
         still taking shape.</p>
     </section>
@@ -34,7 +34,7 @@ useSeoMeta({
           <h2>{{ note.title }}</h2>
           <p>{{ note.description }}</p>
           <div class="tag-row">
-            <span v-for="tag in note.tags" :key="tag">#{{ tag }}</span>
+            <span v-for="tag in note.tags" :key="tag"><span class="tag-hash" aria-hidden="true">#</span>{{ tag }}</span>
           </div>
         </article>
       </NuxtLink>

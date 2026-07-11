@@ -105,7 +105,7 @@ useSeoMeta({
       <p>{{ article.description }}</p>
       <div class="tag-row">
         <NuxtLink v-for="tag in article.tags" :key="tag" :to="{ path: '/blog', query: { tag } }">
-          #{{ tag }}
+          <span class="tag-hash" aria-hidden="true">#</span>{{ tag }}
         </NuxtLink>
       </div>
     </header>
