@@ -8,6 +8,11 @@ const { data: posts } = await useAsyncData('home:blog-posts', () =>
 const featuredPost = computed(() => posts.value?.find((post) => post.featured) ?? posts.value?.[0])
 const recentPosts = computed(() => posts.value?.filter((post) => post.path !== featuredPost.value?.path).slice(0, 4) ?? [])
 
+defineOgImage('BlogTakumi', {
+  title: "MAOJL'S LOG",
+  description: 'Code, play, tools, and thoughts worth keeping.',
+})
+
 useSeoMeta({
   title: "MAOJL'S LOG",
   description: 'A searchable personal logbook for code notes, game records, anime impressions, useful tools, task lists, and everyday thoughts.',
@@ -83,6 +88,10 @@ output: notes, logs, thoughts</code></pre>
             </div>
           </article>
         </NuxtLink>
+      </div>
+      <div v-if="!posts?.length" class="empty-state">
+        <p class="sidebar-title">No published entries</p>
+        <p>The first article will appear here after it is published.</p>
       </div>
     </section>
   </div>

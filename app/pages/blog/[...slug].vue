@@ -11,7 +11,10 @@ const slug = Array.isArray(route.params.slug) ? route.params.slug.join('/') : ro
 const path = `/blog/${slug}`
 
 const { data: post } = await useAsyncData(`blog:${path}`, () =>
-  queryCollection('blog').path(path).first(),
+  queryCollection('blog')
+    .where('draft', '=', false)
+    .path(path)
+    .first(),
 )
 
 if (!post.value) {
@@ -57,6 +60,27 @@ const relatedPosts = computed(() => {
     .filter((item) => item.category === article.value.category || item.tags?.some((tag) => tags.has(tag)))
     .slice(0, 3)
 })
+
+defineOgImage('BlogTakumi', {
+  title: () => article.value.title,
+  description: () => article.value.description,
+})
+
+useSchemaOrg([
+  defineArticle({
+    headline: () => article.value.title,
+    description: () => article.value.description,
+    datePublished: () => article.value.date,
+    author: { name: 'maojl', url: '/' },
+  }),
+  defineBreadcrumb({
+    itemListElement: [
+      { name: 'Home', item: '/' },
+      { name: 'Blog', item: '/blog' },
+      { name: () => article.value.title, item: () => article.value.path },
+    ],
+  }),
+])
 
 useSeoMeta({
   title: () => article.value.title,

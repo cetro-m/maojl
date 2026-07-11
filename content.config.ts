@@ -9,7 +9,7 @@ import { z } from 'zod'
 const articleSchema = z.object({
   title: z.string(),
   description: z.string(),
-  date: z.string(),
+  date: z.iso.date(),
   category: z.string(),
   tags: z.array(z.string()).default([]),
   featured: z.boolean().default(false),
@@ -24,6 +24,25 @@ const articleSchema = z.object({
   }).optional(),
 })
 
+const releaseSchema = z.object({
+  title: z.string(),
+  description: z.string(),
+  version: z.string().regex(/^v?\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/),
+  date: z.iso.date(),
+  latest: z.boolean().default(false),
+  prerelease: z.boolean().default(false),
+  draft: z.boolean().default(false),
+  commit: z.string().optional(),
+  repositoryUrl: z.url().optional(),
+  compareUrl: z.url().optional(),
+  assets: z.array(z.object({
+    name: z.string(),
+    url: z.url(),
+    size: z.string().optional(),
+    platform: z.string().optional(),
+  })).default([]),
+})
+
 export default defineContentConfig({
   collections: {
     blog: defineCollection({
@@ -35,6 +54,11 @@ export default defineContentConfig({
       type: 'page',
       source: 'notes/**/*.md',
       schema: articleSchema,
+    }),
+    releases: defineCollection({
+      type: 'page',
+      source: 'releases/**/*.md',
+      schema: releaseSchema,
     }),
   },
 })

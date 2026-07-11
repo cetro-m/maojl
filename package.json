@@ -2,12 +2,20 @@
   "name": "maojl",
   "type": "module",
   "private": true,
+  "packageManager": "pnpm@11.11.0",
+  "engines": {
+    "node": ">=22.0.0",
+    "pnpm": ">=11.0.0"
+  },
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev --host 127.0.0.1 --port 3010",
     "generate": "nuxt generate",
     "typecheck": "nuxi typecheck",
     "preview": "nuxt preview",
+    "start": "node .output/server/index.mjs",
+    "test:smoke": "node scripts/smoke-test.mjs",
+    "validate": "pnpm typecheck && pnpm build",
     "postinstall": "nuxt prepare"
   },
   "dependencies": {

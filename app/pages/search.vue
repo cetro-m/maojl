@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const route = useRoute()
+const router = useRouter()
 
 const { data: blogPosts } = await useAsyncData('search:blog', () =>
   queryPublishedEntries('blog').all(),
@@ -9,12 +10,38 @@ const { data: notes } = await useAsyncData('search:notes', () =>
   queryPublishedEntries('notes').all(),
 )
 
+const { data: blogSections } = await useAsyncData('search:blog-sections', () =>
+  queryCollectionSearchSections('blog', { minHeading: 'h2', maxHeading: 'h4' }),
+)
+
+const { data: noteSections } = await useAsyncData('search:note-sections', () =>
+  queryCollectionSearchSections('notes', { minHeading: 'h2', maxHeading: 'h4' }),
+)
+
 const searchTerm = ref(typeof route.query.q === 'string' ? route.query.q : '')
 
 const entries = computed(() => [
   ...(blogPosts.value ?? []).map((item) => ({ ...item, collectionLabel: 'Article' })),
   ...(notes.value ?? []).map((item) => ({ ...item, collectionLabel: 'Note' })),
 ])
+
+const searchableContent = computed(() => {
+  const publishedPaths = new Set(entries.value.map((entry) => entry.path))
+  const byPath = new Map<string, string[]>()
+
+  for (const section of [...(blogSections.value ?? []), ...(noteSections.value ?? [])]) {
+    const path = section.id.split('#', 1)[0] || section.id
+
+    if (!publishedPaths.has(path)) {
+      continue
+    }
+
+    const text = [section.title, ...(section.titles ?? []), section.content].join(' ')
+    byPath.set(path, [...(byPath.get(path) ?? []), text])
+  }
+
+  return byPath
+})
 
 const results = computed(() => {
   const query = searchTerm.value.trim().toLowerCase()
@@ -29,11 +56,29 @@ const results = computed(() => {
       entry.description,
       entry.category,
       ...(entry.tags ?? []),
+      ...(searchableContent.value.get(entry.path) ?? []),
     ].join(' ').toLowerCase()
 
     return haystack.includes(query)
   })
 })
+
+let syncTimer: ReturnType<typeof setTimeout> | undefined
+
+watch(searchTerm, (value) => {
+  clearTimeout(syncTimer)
+  syncTimer = setTimeout(() => {
+    const query = value.trim()
+    void router.replace({
+      query: {
+        ...route.query,
+        q: query || undefined,
+      },
+    })
+  }, 250)
+})
+
+onBeforeUnmount(() => clearTimeout(syncTimer))
 
 const resultLabel = computed(() => {
   if (!searchTerm.value.trim()) {
@@ -41,6 +86,11 @@ const resultLabel = computed(() => {
   }
 
   return `${results.value.length} matches for "${searchTerm.value.trim()}"`
+})
+
+defineOgImage('BlogTakumi', {
+  title: 'Search',
+  description: 'Search the personal logbook by phrase, tag, or topic.',
 })
 
 useSeoMeta({
@@ -65,8 +115,8 @@ useSeoMeta({
       <div class="search-panel">
         <label class="search-label" for="content-search">Query</label>
         <input id="content-search" v-model="searchTerm" class="search-input" type="search" autocomplete="off"
-          placeholder="Try tag, design, system...">
-        <p class="list-status">{{ resultLabel }}</p>
+          name="q" placeholder="Try tag, design, system…">
+        <p class="list-status" aria-live="polite">{{ resultLabel }}</p>
       </div>
 
       <div v-if="results.length" class="result-list">

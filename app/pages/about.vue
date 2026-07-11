@@ -1,4 +1,9 @@
 <script setup lang="ts">
+defineOgImage('BlogTakumi', {
+  title: 'About maojl',
+  description: 'A small digital base for code, play, tools, and thoughts.',
+})
+
 useSeoMeta({
   title: 'About maojl',
   description: 'About maojl, a personal logbook for things built, played, watched, tested, and saved for later.',
@@ -22,7 +27,8 @@ useSeoMeta({
     <section class="about-layout">
       <div class="about-panel about-panel-primary">
         <figure class="about-visual">
-          <img src="/images/about-pixel-art.svg" alt="Pixel art trio of wandering samurai" loading="lazy">
+          <img src="/images/about-pixel-art.jpg" alt="Pixel art trio of wandering samurai" width="423" height="237"
+            loading="lazy" decoding="async">
         </figure>
         <p class="sidebar-title">Profile</p>
         <h2>maojl</h2>

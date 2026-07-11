@@ -32,6 +32,11 @@ const filteredPosts = computed(() => {
   return posts.value?.filter((post) => post.tags?.includes(activeTag.value)) ?? []
 })
 
+defineOgImage('BlogTakumi', {
+  title: 'Blog',
+  description: 'Longer thoughts about development, tools, games, and systems.',
+})
+
 useSeoMeta({
   title: 'Blog',
   description: 'Longer posts about development, Nuxt Content, interface design, tools, games, anime, and personal systems.',
@@ -90,6 +95,11 @@ useSeoMeta({
             </div>
           </article>
         </NuxtLink>
+        <div v-if="!filteredPosts.length" class="empty-state">
+          <p class="sidebar-title">No matching entries</p>
+          <p v-if="activeTag">Clear the tag filter or choose another tag.</p>
+          <p v-else>Published articles will appear here.</p>
+        </div>
       </div>
     </section>
   </div>

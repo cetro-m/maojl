@@ -12,6 +12,7 @@ tmp/
 .tmp/
 test-results/
 playwright-report/
+dogfood-output/
 
 # Node dependencies
 node_modules/

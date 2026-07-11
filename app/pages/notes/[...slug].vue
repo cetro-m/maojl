@@ -4,7 +4,10 @@ const slug = Array.isArray(route.params.slug) ? route.params.slug.join('/') : ro
 const path = `/notes/${slug}`
 
 const { data: note } = await useAsyncData(`notes:${path}`, () =>
-  queryCollection('notes').path(path).first(),
+  queryCollection('notes')
+    .where('draft', '=', false)
+    .path(path)
+    .first(),
 )
 
 if (!note.value) {
@@ -15,6 +18,27 @@ if (!note.value) {
 }
 
 const article = computed(() => note.value!)
+
+defineOgImage('BlogTakumi', {
+  title: () => article.value.title,
+  description: () => article.value.description,
+})
+
+useSchemaOrg([
+  defineArticle({
+    headline: () => article.value.title,
+    description: () => article.value.description,
+    datePublished: () => article.value.date,
+    author: { name: 'maojl', url: '/' },
+  }),
+  defineBreadcrumb({
+    itemListElement: [
+      { name: 'Home', item: '/' },
+      { name: 'Notes', item: '/notes' },
+      { name: () => article.value.title, item: () => article.value.path },
+    ],
+  }),
+])
 
 useSeoMeta({
   title: () => article.value.title,

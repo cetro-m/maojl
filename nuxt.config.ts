@@ -2,15 +2,27 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
 const siteDescription = 'A personal logbook for code notes, game records, anime impressions, useful tools, task lists, and everyday thoughts.'
+const lifecycleBuildDirs: Record<string, string> = {
+  build: '.nuxt-build',
+  typecheck: '.nuxt-typecheck',
+}
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  // Keep production builds from replacing the generated files used by a
+  // concurrently running dev server.
+  buildDir: lifecycleBuildDirs[process.env.npm_lifecycle_event || ''] || '.nuxt',
   compatibilityDate: '2025-07-15',
-  devtools: { enabled: true },
+  devtools: { enabled: process.env.NODE_ENV !== 'production' },
   modules: ['@nuxtjs/seo', '@nuxt/content'],
   css: ['~/assets/css/main.css'],
+  vite: {
+    optimizeDeps: {
+      include: ['@unhead/schema-org/vue'],
+    },
+  },
   site: {
-    url: process.env.NUXT_SITE_URL || 'https://maojl.dev',
+    url: process.env.NUXT_SITE_URL || 'https://maojl.xyz',
     name: 'MAOJL.XYZ',
     description: siteDescription,
     defaultLocale: 'zh-CN',
@@ -23,7 +35,9 @@ export default defineNuxtConfig({
     '/archive': { prerender: true },
     '/blog/**': { prerender: true },
     '/notes/**': { prerender: true },
+    '/releases': { prerender: true },
     '/search': { prerender: true },
+    '/rss.xml': { prerender: true },
   },
   robots: {
     blockAiBots: false,
@@ -34,7 +48,7 @@ export default defineNuxtConfig({
     exclude: ['/__nuxt_content/**'],
   },
   schemaOrg: {
-    enabled: false,
+    enabled: true,
   },
   app: {
     head: {

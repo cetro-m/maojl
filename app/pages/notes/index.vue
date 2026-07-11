@@ -3,6 +3,11 @@ const { data: notes } = await useAsyncData('notes:index', () =>
   queryPublishedEntries('notes').all(),
 )
 
+defineOgImage('BlogTakumi', {
+  title: 'Field Notes',
+  description: 'Short observations, fixes, links, lists, and build logs.',
+})
+
 useSeoMeta({
   title: 'Notes',
   description: 'Short notes for task logs, debugging results, game records, anime impressions, tool finds, links, lists, and questions.',
@@ -33,6 +38,10 @@ useSeoMeta({
           </div>
         </article>
       </NuxtLink>
+      <div v-if="!notes?.length" class="empty-state">
+        <p class="sidebar-title">No published notes</p>
+        <p>Short observations and build logs will appear here.</p>
+      </div>
     </div>
   </div>
 </template>

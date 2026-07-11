@@ -46,6 +46,11 @@ const archiveGroups = computed(() => {
   }))
 })
 
+defineOgImage('BlogTakumi', {
+  title: 'Archive',
+  description: 'A chronological trail of everything worth keeping.',
+})
+
 useSeoMeta({
   title: 'Archive',
   description: 'A chronological archive of maojl articles and notes, grouped by year and month for quick revisiting.',
@@ -66,6 +71,10 @@ useSeoMeta({
     </section>
 
     <section class="archive-timeline">
+      <div v-if="!archiveGroups.length" class="empty-state">
+        <p class="sidebar-title">Archive is empty</p>
+        <p>Published articles and notes will be grouped here by date.</p>
+      </div>
       <div v-for="group in archiveGroups" :key="group.year" class="archive-year">
         <div class="archive-year-marker">
           <span>{{ group.year }}</span>
