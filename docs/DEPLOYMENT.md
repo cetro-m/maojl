@@ -30,11 +30,10 @@ Internet -> Nginx :80/:443 -> MAOJL Nitro 127.0.0.1:3010
 
 项目要求 Node.js >=22 和 pnpm >=11。服务器 Node 版本满足要求，但 pnpm 10.33.0 不满足 `package.json` 中的版本约束；正式部署前应为本项目准备 pnpm 11.11.0。不要在未评估现有应用的情况下直接替换系统级 pnpm。
 
-建议使用 Corepack 为部署会话激活固定版本：
+使用 Corepack 显式调用项目固定版本，不要执行全局 `--activate`，以免改变现有 Bioer 应用使用的 pnpm：
 
 ```bash
-corepack prepare pnpm@11.11.0 --activate
-pnpm --version
+corepack pnpm@11.11.0 --version
 ```
 
 ## 上线前置条件
@@ -60,9 +59,10 @@ nginx -t
 
 ```bash
 install -d -o www-data -g www-data -m 755 /var/www/maojl
+install -d -o www-data -g www-data -m 755 /var/cache/maojl/corepack
 sudo -u www-data git clone https://github.com/cetro-m/maojl.git /var/www/maojl
 cd /var/www/maojl
-sudo -u www-data pnpm install --frozen-lockfile
+sudo -u www-data env COREPACK_HOME=/var/cache/maojl/corepack corepack pnpm@11.11.0 install --frozen-lockfile
 ```
 
 不要上传 Windows 本机生成的 `node_modules`、`.nuxt*` 或 `.output*`；原生依赖必须在 Linux 服务器安装和构建。
@@ -87,7 +87,7 @@ cd /var/www/maojl
 set -a
 source /etc/maojl/maojl.env
 set +a
-sudo -E -u www-data pnpm validate
+sudo -E -u www-data env COREPACK_HOME=/var/cache/maojl/corepack corepack pnpm@11.11.0 deploy:build
 ```
 
 ## systemd 单元
@@ -161,7 +161,8 @@ curl -I https://maojl.xyz/sitemap.xml
 curl -I https://maojl.xyz/rss.xml
 
 cd /var/www/maojl
-SMOKE_BASE_URL=https://maojl.xyz pnpm test:smoke
+sudo -u www-data env COREPACK_HOME=/var/cache/maojl/corepack \
+  SMOKE_BASE_URL=https://maojl.xyz corepack pnpm@11.11.0 test:smoke
 ```
 
 同时确认：canonical、Open Graph、sitemap 和 RSS 均使用正式 HTTPS 域名；不存在页面返回 404；现有 Bioer 域名和 3000 端口服务不受影响。
@@ -177,14 +178,15 @@ cd /var/www/maojl
 git status --short
 git rev-parse HEAD
 sudo -u www-data git pull --ff-only
-sudo -u www-data pnpm install --frozen-lockfile
+sudo -u www-data env COREPACK_HOME=/var/cache/maojl/corepack corepack pnpm@11.11.0 install --frozen-lockfile
 set -a
 source /etc/maojl/maojl.env
 set +a
-sudo -E -u www-data pnpm validate
+sudo -E -u www-data env COREPACK_HOME=/var/cache/maojl/corepack corepack pnpm@11.11.0 deploy:build
 systemctl restart maojl
 systemctl status maojl --no-pager
-SMOKE_BASE_URL=https://maojl.xyz pnpm test:smoke
+sudo -u www-data env COREPACK_HOME=/var/cache/maojl/corepack \
+  SMOKE_BASE_URL=https://maojl.xyz corepack pnpm@11.11.0 test:smoke
 ```
 
 不要使用 `git reset --hard` 清除服务器上的未知改动。回滚应切换到已记录的已知良好提交或 release 目录，重新启动 `maojl`，再执行冒烟测试。

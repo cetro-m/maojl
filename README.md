@@ -23,6 +23,8 @@ pnpm build
 pnpm preview
 pnpm start
 pnpm test:smoke
+pnpm check:production-env
+pnpm deploy:build
 pnpm validate
 ```
 
@@ -39,6 +41,9 @@ generated files used by an active development server.
 `pnpm test:smoke` checks public pages, content detail routes, SEO endpoints, RSS,
 critical font/image assets, and the 404 boundary. Override its target with
 `SMOKE_BASE_URL` when testing preview or a deployed environment.
+
+`pnpm deploy:build` validates the production URL, indexing flag, runtime mode,
+and OG image secret before running the full type check and production build.
 
 ## Project Layout
 
@@ -112,7 +117,7 @@ assets. Use `draft: true` while preparing an unpublished release.
 - Keep blog and notes detail pages aligned to the article content column.
 - Keep readable spacing on small screens down to 320px.
 - Keep navigation stable across Home, Blog, Notes, Releases, About, Archive, and Search.
-- Keep About page artwork in `public/images/about-pixel-art.png`; preserve its explicit dimensions to avoid layout shift.
+- Keep About page artwork in `public/images/about-pixel-art.jpg`; preserve its explicit dimensions to avoid layout shift.
 
 ## pnpm Notes
 
