@@ -79,7 +79,10 @@ export default defineNuxtConfig({
     },
     _localDatabase: {
       type: 'sqlite',
-      filename: join(tmpdir(), 'maojl-nuxt-content', 'contents.sqlite'),
+      // PrivateTmp gives the production service an isolated, empty /tmp.
+      // Keep the database directly in that writable directory because SQLite
+      // cannot create a missing parent directory on first request.
+      filename: join(tmpdir(), 'maojl-content.sqlite'),
     },
     build: {
       markdown: {
