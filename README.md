@@ -51,10 +51,11 @@ and OG image secret before running the full type check and production build.
 - `app/composables/useContentEntries.ts`: shared published-entry queries for list, search, archive, and navigation payloads.
 - `app/assets/css/main.css`: global visual system and responsive layout rules.
 - `app/pages`: route pages for home, blog, notes, archive, search, and about.
-- `app/pages/releases.vue`: GitHub-style release history assembled from release Markdown.
+- `app/pages/releases`: release index and detail routes assembled from release Markdown.
 - `app/components/content`: custom MDC/prose components used by Nuxt Content.
 - `app/components/OgImage`: local production-safe Open Graph image templates.
 - `app/utils/formatDate.ts`: shared date formatting helper.
+- `app/utils/contentToc.ts`: shared typed table-of-contents flattening helper.
 - `content/blog`: long-form articles.
 - `content/notes`: shorter notes.
 - `content/releases`: structured release records.
@@ -62,6 +63,7 @@ and OG image secret before running the full type check and production build.
 - `public/images/about-pixel-art.jpg`: optimized About page pixel-art profile visual.
 - `scripts/smoke-test.mjs`: public-route and SEO endpoint smoke test.
 - `server/routes/rss.xml.ts`: RSS 2.0 feed endpoint.
+- `deployment`: version-controlled environment, systemd unit/hardening drop-in, and Nginx templates aligned with production.
 - `docs/DEPLOYMENT.md`: Linux, systemd, Nginx, HTTPS, updates, and rollback guide.
 - `content.config.ts`: Nuxt Content collection schema.
 - `nuxt.config.ts`: Nuxt, Content, and SEO module configuration.
@@ -137,7 +139,9 @@ pnpm approve-builds --all
 
 Generated Nuxt, Content, build, package-store, coverage, local database, cache, log, editor, and hosting preview outputs are ignored by `.gitignore`.
 
-The ignore rules also cover alternate generated folders such as `.nuxt-*` and `.output-*`, browser test reports, Wrangler previews, and SQLite journal files.
+The ignore rules also cover alternate generated folders such as `.nuxt-*` and `.output-*`, local audit/Lighthouse output, browser test reports, Wrangler previews, and SQLite journal files.
+
+Production builds precompress public assets. Fonts and version-controlled images are served with a one-year immutable cache policy; rename an asset when replacing its contents so clients receive the new version.
 
 ## Deployment
 

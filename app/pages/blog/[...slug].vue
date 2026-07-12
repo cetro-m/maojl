@@ -1,13 +1,4 @@
 <script setup lang="ts">
-type TocLink = {
-  id: string
-  text: string
-  depth?: number
-  children?: TocLink[]
-}
-
-type FlatTocLink = TocLink & { depth: number }
-
 const route = useRoute()
 const slug = Array.isArray(route.params.slug) ? route.params.slug.join('/') : route.params.slug
 const path = `/blog/${slug}`
@@ -52,15 +43,7 @@ const olderPost = computed(() => {
   return publishedPosts.value?.[currentIndex.value + 1] ?? null
 })
 
-const tocLinks = computed<TocLink[]>(() => article.value.body?.toc?.links ?? [])
-const flatTocLinks = computed<FlatTocLink[]>(() => {
-  const flatten = (links: TocLink[], fallbackDepth = 2): FlatTocLink[] => links.flatMap((link) => [
-    { ...link, depth: link.depth ?? fallbackDepth },
-    ...flatten(link.children ?? [], (link.depth ?? fallbackDepth) + 1),
-  ])
-
-  return flatten(tocLinks.value)
-})
+const tocLinks = computed(() => flattenToc(article.value.body?.toc?.links))
 
 const relatedPosts = computed(() => {
   const tags = new Set(article.value.tags ?? [])
@@ -125,9 +108,9 @@ useSeoMeta({
         <p class="sidebar-title">Reading</p>
         <p>{{ article.readingTime || 'Long form' }}</p>
 
-        <nav v-if="flatTocLinks.length" class="toc-nav" aria-label="Table of contents">
+        <nav v-if="tocLinks.length" class="toc-nav" aria-label="Table of contents">
           <p class="sidebar-title">On this page</p>
-          <a v-for="link in flatTocLinks" :key="link.id" :href="`#${link.id}`" :data-depth="link.depth">
+          <a v-for="link in tocLinks" :key="link.id" :href="`#${link.id}`" :data-depth="link.depth">
             {{ link.text }}
           </a>
         </nav>

@@ -13,6 +13,8 @@ tmp/
 test-results/
 playwright-report/
 dogfood-output/
+.audit-*/
+.lighthouseci/
 
 # Node dependencies
 node_modules/

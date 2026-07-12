@@ -9,18 +9,19 @@ type ArchiveEntry = {
   collectionLabel: string
 }
 
-const { data: blogPosts } = await useAsyncData('archive:blog', () =>
-  queryPublishedEntries('blog').all(),
-)
+const { data: content } = await useAsyncData('archive:entries', async () => {
+  const [blogPosts, notes] = await Promise.all([
+    queryPublishedEntries('blog').all(),
+    queryPublishedEntries('notes').all(),
+  ])
 
-const { data: notes } = await useAsyncData('archive:notes', () =>
-  queryPublishedEntries('notes').all(),
-)
+  return { blogPosts, notes }
+})
 
 const entries = computed<ArchiveEntry[]>(() =>
   [
-    ...(blogPosts.value ?? []).map((item) => ({ ...item, collectionLabel: 'Article' })),
-    ...(notes.value ?? []).map((item) => ({ ...item, collectionLabel: 'Note' })),
+    ...(content.value?.blogPosts ?? []).map((item) => ({ ...item, collectionLabel: 'Article' })),
+    ...(content.value?.notes ?? []).map((item) => ({ ...item, collectionLabel: 'Note' })),
   ].sort((a, b) => Number(new Date(b.date)) - Number(new Date(a.date))),
 )
 
@@ -28,9 +29,9 @@ const archiveGroups = computed(() => {
   const years = new Map<string, Map<string, ArchiveEntry[]>>()
 
   entries.value.forEach((entry) => {
-    const date = new Date(entry.date)
-    const year = String(date.getFullYear())
-    const month = date.toLocaleString('en', { month: 'long' })
+    const date = new Date(`${entry.date}T00:00:00Z`)
+    const year = String(date.getUTCFullYear())
+    const month = date.toLocaleString('en', { month: 'long', timeZone: 'UTC' })
 
     if (!years.has(year)) {
       years.set(year, new Map())

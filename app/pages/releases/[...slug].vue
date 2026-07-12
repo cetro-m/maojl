@@ -1,13 +1,4 @@
 <script setup lang="ts">
-type TocLink = {
-  id: string
-  text: string
-  depth?: number
-  children?: TocLink[]
-}
-
-type FlatTocLink = TocLink & { depth: number }
-
 const route = useRoute()
 const slug = Array.isArray(route.params.slug) ? route.params.slug.join('/') : route.params.slug
 const path = `/releases/${slug}`
@@ -21,14 +12,7 @@ if (!release.value) {
 }
 
 const entry = computed(() => release.value!)
-const tocLinks = computed<FlatTocLink[]>(() => {
-  const flatten = (links: TocLink[], fallbackDepth = 2): FlatTocLink[] => links.flatMap((link) => [
-    { ...link, depth: link.depth ?? fallbackDepth },
-    ...flatten(link.children ?? [], (link.depth ?? fallbackDepth) + 1),
-  ])
-
-  return flatten(entry.value.body?.toc?.links ?? [])
-})
+const tocLinks = computed(() => flattenToc(entry.value.body?.toc?.links))
 
 defineOgImage('BlogTakumi', {
   title: () => `${entry.value.version} · ${entry.value.title}`,

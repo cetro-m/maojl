@@ -1,0 +1,25 @@
+[Unit]
+Description=MAOJL.XYZ Nuxt server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=maojl
+Group=maojl
+WorkingDirectory=/var/www/maojl
+EnvironmentFile=/etc/maojl/maojl.env
+ExecStart=/usr/bin/node /var/www/maojl/.output/server/index.mjs
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=20
+KillSignal=SIGTERM
+UMask=0027
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+ReadWritePaths=/var/www/maojl
+
+[Install]
+WantedBy=multi-user.target

@@ -16,6 +16,9 @@ export default defineNuxtConfig({
   devtools: { enabled: process.env.NODE_ENV !== 'production' },
   modules: ['@nuxtjs/seo', '@nuxt/content'],
   css: ['~/assets/css/main.css'],
+  nitro: {
+    compressPublicAssets: true,
+  },
   vite: {
     optimizeDeps: {
       include: ['@unhead/schema-org/vue'],
@@ -30,6 +33,8 @@ export default defineNuxtConfig({
     trailingSlash: false,
   },
   routeRules: {
+    '/fonts/**': { headers: { 'cache-control': 'public, max-age=31536000, immutable' } },
+    '/images/**': { headers: { 'cache-control': 'public, max-age=31536000, immutable' } },
     '/': { prerender: true },
     '/about': { prerender: true },
     '/archive': { prerender: true },

@@ -2,35 +2,35 @@
 const route = useRoute()
 const router = useRouter()
 
-const { data: blogPosts } = await useAsyncData('search:blog', () =>
-  queryPublishedEntries('blog').all(),
-)
+const { data: searchIndex } = await useAsyncData('search:index', async () => {
+  const [blogPosts, notes, blogSections, noteSections] = await Promise.all([
+    queryPublishedEntries('blog').all(),
+    queryPublishedEntries('notes').all(),
+    queryCollectionSearchSections('blog', { minHeading: 'h2', maxHeading: 'h4' }),
+    queryCollectionSearchSections('notes', { minHeading: 'h2', maxHeading: 'h4' }),
+  ])
 
-const { data: notes } = await useAsyncData('search:notes', () =>
-  queryPublishedEntries('notes').all(),
-)
-
-const { data: blogSections } = await useAsyncData('search:blog-sections', () =>
-  queryCollectionSearchSections('blog', { minHeading: 'h2', maxHeading: 'h4' }),
-)
-
-const { data: noteSections } = await useAsyncData('search:note-sections', () =>
-  queryCollectionSearchSections('notes', { minHeading: 'h2', maxHeading: 'h4' }),
-)
+  return { blogPosts, notes, blogSections, noteSections }
+})
 
 const searchTerm = ref(typeof route.query.q === 'string' ? route.query.q : '')
 let syncingFromRoute = false
 
 const entries = computed(() => [
-  ...(blogPosts.value ?? []).map((item) => ({ ...item, collectionLabel: 'Article' })),
-  ...(notes.value ?? []).map((item) => ({ ...item, collectionLabel: 'Note' })),
+  ...(searchIndex.value?.blogPosts ?? []).map((item) => ({ ...item, collectionLabel: 'Article' })),
+  ...(searchIndex.value?.notes ?? []).map((item) => ({ ...item, collectionLabel: 'Note' })),
 ])
 
 const searchableContent = computed(() => {
   const publishedPaths = new Set(entries.value.map((entry) => entry.path))
   const byPath = new Map<string, string[]>()
 
-  for (const section of [...(blogSections.value ?? []), ...(noteSections.value ?? [])]) {
+  const sections = [
+    ...(searchIndex.value?.blogSections ?? []),
+    ...(searchIndex.value?.noteSections ?? []),
+  ]
+
+  for (const section of sections) {
     const path = section.id.split('#', 1)[0] || section.id
 
     if (!publishedPaths.has(path)) {
