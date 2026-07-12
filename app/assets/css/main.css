@@ -371,6 +371,7 @@ p {
 
 .article-hero h1 {
   font-size: 3rem;
+  max-width: none;
 }
 
 .hero-text,
@@ -560,7 +561,6 @@ p {
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 28px;
   align-items: end;
-  min-height: 330px;
   padding: 46px;
   background:
     linear-gradient(90deg, rgba(117, 255, 106, 0.08) 1px, transparent 1px),
@@ -770,15 +770,19 @@ p {
 }
 
 .filter-list {
-  display: grid;
+  display: flex;
+  flex-wrap: wrap;
   gap: 8px;
 }
 
 .filter-chip {
   display: flex;
+  flex: 1 1 auto;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+  width: max-content;
+  max-width: 100%;
   min-height: 46px;
   padding: 0 14px;
   border: 1px solid var(--line);
@@ -1272,11 +1276,15 @@ p {
   color: #c0ccc4;
 }
 
-.prose a {
+.prose a:not(.prose-anchor) {
   color: var(--cyan);
   text-decoration: underline;
   text-decoration-thickness: 2px;
-  text-underline-offset: 12px;
+  text-underline-offset: 0.3em;
+}
+
+.prose :is(h2, h3, h4) a:not(.prose-anchor) {
+  text-underline-offset: 0.4em;
 }
 
 .prose ul,

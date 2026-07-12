@@ -1,10 +1,11 @@
 ---
 title: Linux 常用命令速查与指南
-description: Linux 常用命令分类整理，涵盖文件管理、文本处理、进程控制、网络诊断和系统信息查询，附实用示例和易错提醒。
-date: 2025-04-12
+description: Linux 常用命令分类整理，涵盖文件管理、文本处理、进程控制、网络诊断和系统信息查询。
+date: 2025-04-19
 category: engineering
 tags:
   - linux
+  - devops
 featured: false
 draft: false
 readingTime: 12 min read
@@ -35,6 +36,10 @@ mv oldname newname        # 移动或重命名
 # 安全删除
 rm -rf dir/               # 慎用，-rf 不确认直接删
 ```
+
+::callout{type="warning" title="注意"}
+`rm -rf` 不可逆，建议养成两个习惯：删除前先 `ls` 确认目标，或在 shell 配置中设置别名 `alias rm='rm -i'` 让每次删除都要求确认。
+::
 
 ### 查找文件
 
@@ -126,6 +131,10 @@ kill -15 <PID>                           # 优雅退出（SIGTERM）
 kill -9 <PID>                            # 强制杀死（SIGKILL）
 pkill -f "node app.js"                   # 按名称匹配杀死
 ```
+
+::callout{type="warning" title="注意"}
+`kill -9` (SIGKILL) 无法被进程捕获，进程没有机会做资源清理、写日志或释放连接。应优先使用 `kill -15` (SIGTERM)，只有在 SIGTERM 无效时才使用 `kill -9`。
+::
 
 ### 后台运行
 

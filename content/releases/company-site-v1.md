@@ -1,6 +1,6 @@
 ---
 title: 企业官网正式上线
-description: 基于 Strapi v5 + Nuxt 4 的双语企业官网发布。涵盖 CMS 内容架构、Admin 后台定制、前端站点页面、认证文件网关、缓存策略与安全加固，完整内容到发布流水线就绪。
+description: 基于 Strapi v5 + Nuxt 4 的双语企业官网正式发布。涵盖 CMS 内容架构、Admin 后台定制、前端站点页面、认证文件网关、缓存策略与安全加固，完整内容到发布流水线就绪。
 version: v1.0.0
 date: 2026-07-01
 latest: true
@@ -214,5 +214,5 @@ SOFT_DELETE_AUTO_PURGE_TTL_DAYS=30
 ```
 
 ::callout{type="terminal" title="发布信号"}
-本次发布标志着企业官网具备了面向生产环境的完整链路：双语编辑后台 → 缓存内容代理 → 安全认证网关 → CDN 边缘交付。后续迭代将聚焦性能基线、Strapi Webhook 主动缓存刷新和更细粒度的权限模型。
+双语编辑后台 → 缓存内容代理 → 安全认证网关 → CDN 边缘交付，全链路就绪。后续：性能基线、Strapi Webhook 缓存刷新、细粒度权限。
 ::

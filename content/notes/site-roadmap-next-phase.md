@@ -1,16 +1,18 @@
 ---
 title: 官网后续开发规划
-description: 整理 Bioer 站点下一阶段的开发任务，按前端优化、后端工具、国际化扩展三个方向分类。
+description: 官网下一阶段的开发任务，按前端优化、后端工具和国际化扩展三个方向分类。
 date: 2026-07-10
 category: engineering
 tags:
-  - roadmap
+  - devops
+  - nuxt
+  - strapi
 featured: false
 draft: false
 readingTime: 2 min read
 ---
 
-## 记录
+## 备忘录
 
 下一阶段开发任务梳理，按交付方向分组。
 

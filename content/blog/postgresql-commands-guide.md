@@ -1,22 +1,17 @@
 ---
 title: PostgreSQL 日常运维与查询实战
-description: 面向开发者的 PostgreSQL 常用操作指南，涵盖数据库管理、表操作、索引优化、备份恢复、性能诊断和事务排查，附真实场景 SQL 示例。
+description: PostgreSQL 常用操作指南，涵盖数据库管理、表操作、索引优化、备份恢复、性能诊断和事务排查。
 date: 2025-07-24
 category: engineering
 tags:
   - postgresql
   - database
   - sql
+  - devops
 featured: false
 draft: false
 readingTime: 14 min read
 ---
-
-## 背景
-
-PostgreSQL 在开发和生产环境中越来越常见。大部分开发者能写出 CRUD，但面对连接池耗尽、慢查询优化、锁等待排查等场景时，往往需要临时翻文档。
-
-本文以 PostgreSQL 14+ 为主，按使用频率分类整理日常必需的数据库操作。假设你已经安装好了 PostgreSQL 客户端（`psql`）。
 
 ## 连接与基础操作
 
@@ -239,11 +234,17 @@ pg_dump -h prod.example.com -U app_user -Fc mydb > prod_backup.dump
 
 ### 备份策略建议
 
+以下 cron 示例中 `%` 需要转义，这是 crontab 的语法要求：
+
 ```bash
 # 每天凌晨 3 点执行完整备份并保留 7 天
 0 3 * * * pg_dump -U postgres -Fc -j 4 mydb > /backups/mydb_$(date +\%Y\%m\%d).dump && \
           find /backups -name "mydb_*.dump" -mtime +7 -delete
 ```
+
+::callout{type="note" title="提示"}
+生产环境建议使用 `.pgpass` 文件管理密码，避免在脚本中明文写入；定期验证备份文件的可用性（`pg_restore --list` 可列出备份内容而不实际恢复）。
+::
 
 ## 事务与锁排查
 

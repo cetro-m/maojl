@@ -1,11 +1,11 @@
 ---
 title: Nginx 配置实战：反向代理、静态服务与性能调优
-description: 从基础站点配置到生产环境调优，系统讲解 Nginx 作为反向代理、静态文件服务器、HTTPS 终结和负载均衡的典型用法，附常用场景完整示例。
+description: 从基础站点配置到生产环境调优，系统讲解 Nginx 作为反向代理、静态文件服务器、HTTPS 终结和负载均衡的典型用法。
 date: 2024-09-06
 category: engineering
 tags:
   - nginx
-  - deployment
+  - devops
 featured: false
 draft: false
 readingTime: 12 min read
@@ -473,6 +473,13 @@ ss -tlnp | grep 3000
 
 # 是否有 SELinux 拦截（CentOS/RHEL 常见）
 sudo setenforce 0    # 临时关闭测试
+```
+
+::callout{type="warning" title="注意"}
+`setenforce 0` 会临时关闭 SELinux，降低系统安全级别。仅用于临时测试定位问题。生产环境应通过 `sudo setsebool -P httpd_can_network_connect 1` 永久解决，而不是保持 SELinux 关闭。
+::
+
+```bash
 # 永久解决：sudo setsebool -P httpd_can_network_connect 1
 
 # 检查 nginx error log

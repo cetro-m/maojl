@@ -1,12 +1,12 @@
 ---
 title: PM2 Node.js 进程管理方案
-description: 从安装配置到生产部署，系统讲解 PM2 的进程管理、日志轮转、集群模式、优雅重启和监控告警，附带 ecosystem.config.js 完整模板。
+description: 从安装配置到生产部署，系统讲解 PM2 的进程管理、日志轮转、集群模式、优雅重启和监控告警。
 date: 2026-04-16
 category: engineering
 tags:
   - nodejs
   - pm2
-  - deployment
+  - devops
 featured: false
 draft: false
 readingTime: 10 min read
@@ -249,6 +249,13 @@ max_memory_restart: '500M',   // 达到 500MB 时自动重启
 lsof -i :3000
 # 或
 ss -tlnp | grep 3000
+```
+
+::callout{type="warning" title="注意"}
+`kill -9` (SIGKILL) 会强制杀死进程，进程没有机会做优雅关闭。应优先使用 `kill -15` (SIGTERM) 或通过 PM2 的 `pm2 stop` 进行受控停止。
+::
+
+```bash
 kill -9 <PID>
 ```
 
