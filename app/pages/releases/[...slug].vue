@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { flattenToc } from '~/utils/contentToc'
+
 const route = useRoute()
 const slug = Array.isArray(route.params.slug) ? route.params.slug.join('/') : route.params.slug
 const path = `/releases/${slug}`
