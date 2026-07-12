@@ -18,6 +18,22 @@
 
 现有 Bioer 应用是独立生产系统。部署 MAOJL 时不得复用或覆盖其目录、3000 端口、systemd 单元和 Nginx 配置。
 
+## 进程管理决策
+
+MAOJL 固定使用独立的 `maojl.service`，不加入服务器现有的 root PM2 实例。
+
+服务器上的 PM2 当前负责 Bioer Web、CMS 和日志轮转。将 MAOJL 加入同一 PM2 实例会扩大 `pm2 restart all`、`pm2 delete all`、`pm2 kill` 和 `pm2 save` 等命令的影响范围，也会让 MAOJL 继承 root 权限并与 Bioer 共用环境变量和日志目录。
+
+systemd 方案保持以下隔离边界：
+
+- MAOJL 以 `www-data` 用户运行，不使用 root PM2 daemon。
+- 直接执行 `/usr/bin/node .output/server/index.mjs`，运行阶段不依赖 pnpm。
+- 环境变量只从 `/etc/maojl/maojl.env` 加载。
+- 日志由 journald 单独记录在 `maojl.service` 下。
+- 启停 MAOJL 不调用任何 `pm2` 命令，不影响 Bioer 进程清单。
+
+不要为 MAOJL 执行 `pm2 start`、`pm2 save` 或 `pm2 startup`。
+
 ## 目标结构
 
 ```text
@@ -122,6 +138,22 @@ WantedBy=multi-user.target
 ```
 
 首次启用前先确认 `ExecStart`、工作目录、用户和 3010 端口均正确，再执行 `daemon-reload` 和启动操作。
+
+```bash
+systemctl daemon-reload
+systemctl enable --now maojl
+systemctl status maojl --no-pager
+journalctl -u maojl -n 100 --no-pager
+```
+
+日常只操作 MAOJL 自己的服务单元：
+
+```bash
+systemctl restart maojl
+systemctl stop maojl
+systemctl start maojl
+journalctl -u maojl -f
+```
 
 ## Nginx 独立站点
 
