@@ -1,7 +1,7 @@
 ---
 title: Nginx 配置实战：反向代理、静态服务与性能调优
 description: 从基础站点配置到生产环境调优，系统讲解 Nginx 作为反向代理、静态文件服务器、HTTPS 终结和负载均衡的典型用法，附常用场景完整示例。
-date: 2026-07-12
+date: 2024-09-06
 category: engineering
 tags:
   - nginx

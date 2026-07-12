@@ -1,7 +1,7 @@
 ---
-title: PM2 实战：Node.js 进程管理的正确姿势
+title: PM2 Node.js 进程管理方案
 description: 从安装配置到生产部署，系统讲解 PM2 的进程管理、日志轮转、集群模式、优雅重启和监控告警，附带 ecosystem.config.js 完整模板。
-date: 2026-07-12
+date: 2026-04-16
 category: engineering
 tags:
   - nodejs

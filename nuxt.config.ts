@@ -71,6 +71,9 @@ export default defineNuxtConfig({
         { property: 'og:site_name', content: 'MAOJL.XYZ' },
         { name: 'twitter:card', content: 'summary_large_image' },
       ],
+      link: [
+        { rel: 'icon', type: 'image/png', href: '/blog.png' },
+      ],
     },
   },
   content: {
@@ -88,8 +91,8 @@ export default defineNuxtConfig({
       markdown: {
         highlight: {
           theme: {
-            default: 'github-light',
-            dark: 'github-dark',
+            default: 'dark-plus',
+            dark: 'dark-plus',
           },
           langs: ['vue', 'typescript', 'javascript', 'bash', 'json', 'yaml', 'md'],
         },

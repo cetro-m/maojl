@@ -1,7 +1,7 @@
 ---
-title: Linux 常用命令速查与实战指南
-description: 面向开发者的 Linux 常用命令分类整理，涵盖文件管理、文本处理、进程控制、网络诊断和系统信息查询，附实用示例和易错提醒。
-date: 2026-07-12
+title: Linux 常用命令速查与指南
+description: Linux 常用命令分类整理，涵盖文件管理、文本处理、进程控制、网络诊断和系统信息查询，附实用示例和易错提醒。
+date: 2025-04-12
 category: engineering
 tags:
   - linux

@@ -1,7 +1,7 @@
 ---
 title: PostgreSQL 日常运维与查询实战
 description: 面向开发者的 PostgreSQL 常用操作指南，涵盖数据库管理、表操作、索引优化、备份恢复、性能诊断和事务排查，附真实场景 SQL 示例。
-date: 2026-07-12
+date: 2025-07-24
 category: engineering
 tags:
   - postgresql

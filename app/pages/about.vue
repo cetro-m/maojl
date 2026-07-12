@@ -64,7 +64,7 @@ articles + notes + logs + lists</code></pre>
         <ul class="signal-list">
           <li>
             <span>BLOG</span>
-            <strong>Longer posts about development, tools, games, anime, and thoughts.</strong>
+            <strong>Longer posts about development and thoughts.</strong>
           </li>
           <li>
             <span>NOTES</span>
@@ -82,19 +82,19 @@ articles + notes + logs + lists</code></pre>
         <ul class="signal-list">
           <li>
             <span>FRONTEND</span>
-            <strong>Web interfaces, UI systems, and content sites.</strong>
+            <strong>Nuxt, Vue, TypeScript, responsive UI, accessibility, and SEO.</strong>
           </li>
           <li>
             <span>BACKEND</span>
-            <strong>API, ERP, CMS, DB, and automation.</strong>
+            <strong>Node.js, REST APIs, authentication, CMS, and business logic.</strong>
           </li>
           <li>
-            <span>SERVER</span>
-            <strong>Linux, Nginx, deployment, CDN, and reliability.</strong>
+            <span>DEVOPS</span>
+            <strong>Linux, Nginx, PM2, Docker, CI/CD, CDN, and monitoring.</strong>
           </li>
           <li>
-            <span>WORKFLOW</span>
-            <strong>Git, scripts, package tools, and AI-assisted work.</strong>
+            <span>ENGINEERING</span>
+            <strong>Git, testing, debugging, performance, security, and automation.</strong>
           </li>
         </ul>
       </div>

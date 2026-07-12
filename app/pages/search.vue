@@ -133,7 +133,7 @@ useSeoMeta({
       <div class="search-panel">
         <label class="search-label" for="content-search">Query</label>
         <input id="content-search" v-model="searchTerm" class="search-input" type="search" autocomplete="off"
-          name="q" placeholder="Try tag, design, system…">
+          name="q" placeholder="Try tag, key words...">
         <p class="list-status" aria-live="polite">{{ resultLabel }}</p>
       </div>
 

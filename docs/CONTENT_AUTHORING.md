@@ -6,13 +6,19 @@
 
 - 文件必须使用 UTF-8 编码。
 - 文件名使用小写英文、数字和连字符，例如 `nuxt-content-guide.md`。
+- 文件名会成为公开 URL 的最后一段；发布后不要随意重命名，否则旧链接会失效。需要分组时可以使用子目录，目录名也遵循同一命名规则。
 - 日期统一使用 ISO 日期格式 `YYYY-MM-DD`。
+- `date` 仅表示内容日期，不具备定时发布功能。未来日期不会阻止内容上线，是否公开只由 `draft` 控制。
 - Frontmatter 必须位于文件顶部，并使用 `---` 包围。
+- Frontmatter 使用 YAML；含冒号、`#`、前后空格或其他特殊字符的字符串应加引号，避免被解析成错误类型。
 - 正文从二级标题 `##` 开始。页面主标题由 Frontmatter 中的 `title` 渲染，不要在正文重复书写 `# 标题`。
-- `draft: true` 的内容不会出现在列表、详情查询或搜索结果中。
-- 二级标题会用于详情页目录，并生成可访问的 `#` 锚点。
-- 图片建议放在 `public/images` 下，并通过 `/images/example.webp` 引用。
-- 发布内容前执行 `pnpm run typecheck` 和 `pnpm run build`。
+- `draft: true` 的内容不会出现在列表、详情查询或搜索结果中。Schema 默认值是 `false`，因此写作阶段必须显式填写 `draft: true`，不要依赖省略字段。
+- 二级、三级标题会进入详情页目录，并生成可访问的 `#` 锚点。标题文本应简短且尽量保持稳定，避免外部锚点失效。
+- 标题和摘要必须是非空纯文本；`description` 建议控制在一到两句话，不写 Markdown、换行或重复标题。
+- 内部链接使用站点根路径，例如 `[相关文章](/blog/example)`，不要链接 Markdown 源文件或写 `.md` 后缀。外部链接使用完整 HTTPS URL。
+- 图片建议放在 `public/images` 下，并通过 `/images/example.webp` 引用。每张内容图片必须提供有意义的替代文本；纯装饰图片使用空替代文本。
+- 不要在正文、代码块、截图或示例 URL 中写入真实密码、Token、Cookie、私钥、内网地址或生产连接串；统一使用明显的占位值。
+- 发布内容前执行 `pnpm validate`，它会依次完成类型检查与生产构建。
 
 ## Blog
 
@@ -41,6 +47,8 @@ content/blog/
 | `sitemap` | 否 | Sitemap 配置 |
 | `head` | 否 | 自定义 Meta 或 Script 配置 |
 
+除非确实需要覆盖自动生成的 SEO 信息，否则不要填写 `ogImage`、`robots`、`sitemap` 或 `head`。自定义 `head.script` 前必须确认脚本来源可信，并在本地检查最终页面源码。
+
 ### 内容建议
 
 推荐按照“背景与目标 → 核心思路 → 实现过程 → 注意事项 → 总结”的顺序组织正文。
@@ -52,6 +60,7 @@ content/blog/
 - 为代码块标注语言；必要时添加文件名。
 - 使用标题拆分长内容，避免连续的大段文字。
 - 在结尾总结结论和后续方向。
+- 示例命令应说明适用系统、所需权限和潜在副作用；删除、覆盖、数据库写入等危险操作必须明确提示。
 
 ### Blog 模板
 
@@ -235,6 +244,7 @@ release-1.0.0
 ### 发布维护规则
 
 - 建议只保留一个 `latest: true`。
+- 发布新正式版本时，应同时把旧正式版本的 `latest` 改为 `false`；该唯一性由作者维护，Schema 不会自动阻止多个 latest。
 - 预发布版本必须设置 `prerelease: true`。
 - 尚未完成的发布记录应设置 `draft: true`。
 - Releases Index 根据 `date` 从新到旧排序。
@@ -315,7 +325,19 @@ assets:
 
 ## MDC 与 Markdown 用法
 
+当前项目只提供 `Callout` 自定义 MDC 组件，以及 H2、表格的自定义 Prose 渲染。不要直接使用文档示例以外、项目中不存在的 MDC 组件；不要嵌入未经审核的原始 HTML。
+
 ### Callout
+
+`type` 只允许 `note`、`warning`、`terminal`。省略时默认为 `note`。
+
+普通提示：
+
+```md
+::callout{type="note" title="提示"}
+这里填写补充说明。
+::
+```
 
 ```md
 ::callout{type="warning" title="注意"}
@@ -349,6 +371,23 @@ export default defineContentConfig({})
 ```
 ````
 
+- 语言标识优先使用项目中已有的常见值，例如 `ts`、`vue`、`js`、`bash`、`json`、`yaml`、`md`、`sql`、`ini`、`dotenv` 或 `text`。
+- 示例应保持可复制；省略内容时用文字解释，不要把 `...` 放进可能被直接执行的命令或配置。
+- 展示终端命令时，不包含 Shell 提示符 `$` 或 `root@host#`，方便复制。
+
+### 链接、图片与表格
+
+```md
+[站内文章](/blog/linux-common-commands)
+[外部文档](https://content.nuxt.com/)
+
+![描述图片实际内容的替代文本](/images/example.webp)
+```
+
+- 发布前逐一打开站内链接和外部链接，确认没有 404、登录墙或临时地址。
+- 图片文件名使用小写英文、数字和连字符；提交前压缩图片，优先使用 WebP/JPEG，避免把原始大图直接放进仓库。
+- 表格列数较多时在 320px 宽度下预览；项目会提供横向滚动，但单元格内容仍应尽量简短。
+
 ## 发布检查清单
 
 发布 Blog、Notes 或 Releases 前检查：
@@ -358,8 +397,11 @@ export default defineContentConfig({})
 - 文件名是否使用小写英文和连字符。
 - 正文是否从 `##` 开始。
 - 是否正确设置 `draft`。
+- 是否误把未来日期当成定时发布。
 - 标签与分类名称是否保持一致。
+- 标题、摘要、标题锚点和公开 URL 是否稳定且无错别字。
 - Release 版本号与 URL 是否符合 Schema。
-- 是否存在失效链接或缺少语言标识的代码块。
-- `pnpm run typecheck` 是否通过。
-- `pnpm run build` 是否通过。
+- 是否存在失效链接、无替代文本的图片或缺少语言标识的代码块。
+- 是否清除了真实密钥、账号、Cookie、内网地址和生产连接信息。
+- 新正式 Release 是否取消了旧版本的 `latest: true`。
+- `pnpm validate` 是否通过。
