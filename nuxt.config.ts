@@ -80,11 +80,17 @@ export default defineNuxtConfig({
     experimental: {
       sqliteConnector: 'native',
     },
+    database: {
+      type: 'sqlite',
+      // The production systemd service only permits writes to its private
+      // /tmp mount. Configure the runtime database explicitly; otherwise
+      // Nuxt Content falls back to .data/content.sqlite in the read-only
+      // application directory when serving the first content request.
+      filename: join(tmpdir(), 'maojl-content.sqlite'),
+    },
     _localDatabase: {
       type: 'sqlite',
-      // PrivateTmp gives the production service an isolated, empty /tmp.
-      // Keep the database directly in that writable directory because SQLite
-      // cannot create a missing parent directory on first request.
+      // Development and prerendering use a disposable local database too.
       filename: join(tmpdir(), 'maojl-content.sqlite'),
     },
     build: {

@@ -178,6 +178,8 @@ sudo -u maojl env \
 journalctl -u maojl --since "10 minutes ago" --no-pager -p warning
 ```
 
+日志中不得出现 `ERR_SQLITE_ERROR` 或 `unable to open database file`。如果出现，说明 Nuxt Content 的生产运行时数据库不可写，即使 `systemctl status` 显示服务为 `active`，发布也没有成功。
+
 简化记忆就是：
 
 ```text
