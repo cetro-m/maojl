@@ -61,41 +61,25 @@ useSeoMeta({
                 <span v-if="release.prerelease" class="release-badge prerelease">Pre-release</span>
                 <span class="release-badge published">Published</span>
               </div>
-              <h2>{{ release.title }}</h2>
+              <h2><NuxtLink :to="release.path">{{ release.title }}</NuxtLink></h2>
               <p>{{ release.description }}</p>
             </div>
 
-            <a class="release-version" :href="`#${release.version}`" :aria-label="`Link to ${release.version}`">
+            <NuxtLink class="release-version" :to="release.path" :aria-label="`Open release ${release.version}`">
               <span>tag</span>
               <strong>{{ release.version }}</strong>
-            </a>
+            </NuxtLink>
           </header>
 
           <div class="release-meta-bar">
             <span><b>DATE</b>{{ formatDate(release.date) }}</span>
             <span v-if="release.commit"><b>COMMIT</b><code>{{ release.commit }}</code></span>
-            <a v-if="release.compareUrl" :href="release.compareUrl" target="_blank" rel="noopener noreferrer">
-              Compare changes ↗
-            </a>
           </div>
 
-          <ContentRenderer class="release-notes prose" :value="release" />
-
-          <section v-if="release.assets.length" class="release-assets">
-            <h3>Assets <span>{{ release.assets.length }}</span></h3>
-            <a v-for="asset in release.assets" :key="asset.url" :href="asset.url" target="_blank"
-              rel="noopener noreferrer" class="release-asset">
-              <span class="asset-icon" aria-hidden="true">↓</span>
-              <span class="asset-copy">
-                <strong>{{ asset.name }}</strong>
-                <small>{{ [asset.platform, asset.size].filter(Boolean).join(' · ') }}</small>
-              </span>
-              <span aria-hidden="true">↗</span>
-            </a>
-          </section>
-
-          <footer v-if="release.repositoryUrl" class="release-footer">
-            <a :href="release.repositoryUrl" target="_blank" rel="noopener noreferrer">View repository ↗</a>
+          <footer class="release-footer release-index-footer">
+            <span v-if="release.assets.length">{{ release.assets.length }} downloadable {{ release.assets.length === 1 ? 'asset' : 'assets' }}</span>
+            <span v-else>Release notes available</span>
+            <NuxtLink :to="release.path">Read release notes →</NuxtLink>
           </footer>
         </div>
       </article>
