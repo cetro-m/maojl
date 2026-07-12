@@ -112,7 +112,7 @@ samp {
 }
 
 :focus-visible {
-  outline: 2px solid var(--cyan);
+  outline: 2px solid var(--accent);
   outline-offset: 3px;
 }
 
@@ -834,6 +834,7 @@ p {
 }
 
 .search-input:focus-visible {
+  outline: none;
   border-color: var(--accent);
   box-shadow: 4px 4px 0 #000;
 }
@@ -1113,9 +1114,32 @@ p {
 .toc-nav {
   display: grid;
   gap: 8px;
+  max-height: calc(100dvh - 282px);
   margin-top: 24px;
   padding-top: 18px;
+  padding-right: 6px;
   border-top: 2px solid var(--line);
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  scrollbar-color: var(--line) var(--code-bg);
+  scrollbar-width: thin;
+}
+
+.toc-nav::-webkit-scrollbar {
+  width: 8px;
+}
+
+.toc-nav::-webkit-scrollbar-track {
+  background: var(--code-bg);
+}
+
+.toc-nav::-webkit-scrollbar-thumb {
+  border: 2px solid var(--code-bg);
+  background: var(--line);
+}
+
+.toc-nav::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
 }
 
 .toc-nav .sidebar-title {
@@ -1123,14 +1147,30 @@ p {
 }
 
 .toc-nav a {
+  display: block;
+  padding: 3px 6px;
+  border-left: 2px solid transparent;
   color: var(--muted);
   font-family: var(--font-mono);
   font-size: 1.05rem;
   line-height: 1.42;
 }
 
-.toc-nav a:hover {
+.toc-nav a[data-depth="3"] {
+  padding-left: 18px;
+  font-size: 0.96rem;
+}
+
+.toc-nav a[data-depth="4"] {
+  padding-left: 30px;
+  font-size: 0.92rem;
+}
+
+.toc-nav a:hover,
+.toc-nav a:focus-visible {
+  border-left-color: var(--accent);
   color: var(--accent);
+  background: rgba(117, 255, 106, 0.05);
 }
 
 .prose {
@@ -1143,6 +1183,20 @@ p {
 
 .article-shell > .prose {
   max-width: none;
+}
+
+.prose > p,
+.prose > ul,
+.prose > ol,
+.prose > blockquote,
+.prose > .prose-heading,
+.prose > h3,
+.prose > h4 {
+  max-width: 76ch;
+}
+
+.prose > p {
+  text-wrap: pretty;
 }
 
 .prose > :first-child {
@@ -1222,8 +1276,8 @@ p {
 .prose a {
   color: var(--cyan);
   text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 4px;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 12px;
 }
 
 .prose ul,
@@ -1256,6 +1310,9 @@ p {
 }
 
 .prose :not(pre) > code {
+  overflow-wrap: anywhere;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
   padding: 0.18em 0.38em;
   border: 1px solid var(--line);
   background: var(--code-bg);
@@ -1273,6 +1330,7 @@ p {
   background: var(--code-bg);
   color: var(--code-ink);
   box-shadow: 8px 8px 0 #000;
+  overscroll-behavior-inline: contain;
 }
 
 .prose pre::before {
@@ -1316,15 +1374,25 @@ p {
   color: var(--amber) !important;
 }
 
-.prose table {
-  display: block;
+.prose-table-scroll {
   overflow-x: auto;
   width: 100%;
   margin: 2em 0;
-  border-collapse: collapse;
   border: 2px solid var(--line);
   background: rgba(16, 20, 26, 0.9);
   box-shadow: var(--shadow);
+  overscroll-behavior-inline: contain;
+}
+
+.prose-table-scroll:focus-visible {
+  outline-offset: 4px;
+}
+
+.prose table {
+  width: 100%;
+  min-width: max-content;
+  margin: 0;
+  border-collapse: collapse;
 }
 
 .prose th,
@@ -1333,6 +1401,7 @@ p {
   border: 1px solid var(--line);
   text-align: left;
   vertical-align: top;
+  min-width: 9rem;
 }
 
 .prose th {
@@ -1623,6 +1692,10 @@ p {
   text-wrap: balance;
 }
 
+.article-page > .related-section {
+  border-top: 0;
+}
+
 .release-title-block h2 a {
   color: inherit;
 }
@@ -1872,6 +1945,11 @@ p {
 
 .release-detail-content .release-notes {
   padding-top: 8px;
+}
+
+.release-detail-aside .toc-nav + a {
+  display: inline-block;
+  margin-top: 22px;
 }
 
 .release-empty {
@@ -2146,13 +2224,22 @@ p {
     display: flex;
     flex-wrap: wrap;
     gap: 8px 12px;
+    max-height: none;
     margin-top: 4px;
     padding-top: 12px;
+    padding-right: 0;
+    overflow-y: visible;
   }
 
   .toc-nav .sidebar-title {
     flex-basis: 100%;
     margin-bottom: 0;
+  }
+
+  .toc-nav a[data-depth="3"],
+  .toc-nav a[data-depth="4"] {
+    padding-left: 6px;
+    font-size: 1rem;
   }
 
   .about-panel-primary {
@@ -2178,6 +2265,15 @@ p {
 
   .prose pre {
     padding: 56px 16px 18px;
+    margin-right: -6px;
+    margin-left: -6px;
+    box-shadow: 4px 4px 0 #000;
+  }
+
+  .prose-table-scroll {
+    width: calc(100% + 12px);
+    margin-left: -6px;
+    box-shadow: 4px 4px 0 #000;
   }
 
   .prose-anchor {

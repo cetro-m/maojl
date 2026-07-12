@@ -1,4 +1,13 @@
 <script setup lang="ts">
+type TocLink = {
+  id: string
+  text: string
+  depth?: number
+  children?: TocLink[]
+}
+
+type FlatTocLink = TocLink & { depth: number }
+
 const route = useRoute()
 const slug = Array.isArray(route.params.slug) ? route.params.slug.join('/') : route.params.slug
 const path = `/notes/${slug}`
@@ -18,6 +27,14 @@ if (!note.value) {
 }
 
 const article = computed(() => note.value!)
+const tocLinks = computed<FlatTocLink[]>(() => {
+  const flatten = (links: TocLink[], fallbackDepth = 2): FlatTocLink[] => links.flatMap((link) => [
+    { ...link, depth: link.depth ?? fallbackDepth },
+    ...flatten(link.children ?? [], (link.depth ?? fallbackDepth) + 1),
+  ])
+
+  return flatten(article.value.body?.toc?.links ?? [])
+})
 
 defineOgImage('BlogTakumi', {
   title: () => article.value.title,
@@ -70,6 +87,13 @@ useSeoMeta({
       <aside class="article-aside">
         <p class="sidebar-title">Note</p>
         <p>{{ article.readingTime || 'Short form' }}</p>
+
+        <nav v-if="tocLinks.length" class="toc-nav" aria-label="Table of contents">
+          <p class="sidebar-title">On this page</p>
+          <a v-for="link in tocLinks" :key="link.id" :href="`#${link.id}`" :data-depth="link.depth">
+            {{ link.text }}
+          </a>
+        </nav>
       </aside>
 
       <ContentRenderer class="prose" :value="article" />
