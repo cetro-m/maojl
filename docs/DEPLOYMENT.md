@@ -135,6 +135,7 @@ sudo -E -u maojl env \
 - `/etc/systemd/system/maojl.service` 对应 `deployment/maojl.service`。
 - `/etc/systemd/system/maojl.service.d/hardening.conf` 对应 `deployment/maojl-hardening.conf`。
 - 当前 `systemd-analyze security maojl` 暴露评分为 2.8（OK）。
+- `ReadWritePaths=/tmp` 只放行经 `PrivateTmp=true` 隔离后的服务私有临时目录，供 Nuxt Content 创建临时 SQLite 数据库；项目目录和宿主机共享 `/tmp` 仍不对服务开放。
 
 安装模板：
 
